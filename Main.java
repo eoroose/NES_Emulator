@@ -1,4 +1,5 @@
 import java.nio.IntBuffer;
+import java.util.Objects;
 
 import Example.Example;
 import org.lwjgl.opengl.GL;
@@ -30,7 +31,7 @@ public class Main {
         GLFW.glfwDestroyWindow(window);
 
         GLFW.glfwTerminate();
-        GLFW.glfwSetErrorCallback(null).free();
+        Objects.requireNonNull(GLFW.glfwSetErrorCallback(null)).free();
     }
 
     public void setup() {
@@ -59,6 +60,7 @@ public class Main {
 
             GLFWVidMode vidmode = GLFW.glfwGetVideoMode(GLFW.glfwGetPrimaryMonitor());
 
+            assert vidmode != null;
             GLFW.glfwSetWindowPos(window,(vidmode.width() - pWidth.get(0)) / 2,(vidmode.height() - pHeight.get(0)) / 2);
 
             GLFW.glfwMakeContextCurrent(window);
