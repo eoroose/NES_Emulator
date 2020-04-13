@@ -14,10 +14,6 @@ public class Pixel {
         this.color = color;
     }
 
-    public  Pixel(int x, int y, int realX, int realY, int r, int g, int b) {
-        this(x, y, realX, realY, new Color(r, g, b));
-    }
-
     public int getX() {
         return x;
     }

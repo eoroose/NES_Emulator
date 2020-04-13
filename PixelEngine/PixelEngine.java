@@ -6,19 +6,21 @@ import java.awt.*;
 import java.util.ArrayList;
 import java.util.Iterator;
 
-
 public class PixelEngine {
 
-    private final int width, height;
+    private final int realWidth, realHeight, width, height, size;
     private final Pixel[] pixels;
     private final float[] RGBs;
     private final ArrayList<Pixel[]> pixelUpdate;
 
-    public PixelEngine(int width, int height) {
-        this.width = width;
-        this.height = height;
-        pixels = new Pixel[width * height];
-        RGBs = new float[width * height * 3];
+    public PixelEngine(int width, int height, int size) {
+        realWidth = width;
+        realHeight = height;
+        this.width = width / size;
+        this.height = height / size;
+        this.size = size;
+        pixels = new Pixel[this.width * this.height];
+        RGBs = new float[width * height * size * 3];
         pixelUpdate = new ArrayList<>();
         initPixels();
     }
@@ -32,13 +34,13 @@ public class PixelEngine {
     }
 
     public void render() {
-        GL11.glDrawPixels(width, height, GL11.GL_RGB, GL11.GL_FLOAT, RGBs);
+        GL11.glDrawPixels(realWidth, realHeight, GL11.GL_RGB, GL11.GL_FLOAT, RGBs);
     }
 
     private void initPixels() {
         int x = 0 , y = 0;
-        for(int realY = height-1; realY >= 0; realY--) {
-            for(int realX = 0; realX < width; realX++) {
+        for(int realY = realHeight-1; realY >= 0; realY -= size) {
+            for(int realX = 0; realX < realWidth; realX += size) {
                 pixels[x + y * width] = new Pixel(x, y, realX, realY, Color.BLACK);
                 x++;
             }
@@ -49,12 +51,18 @@ public class PixelEngine {
     }
 
     private void setRGBs(Pixel[] pixels) {
-        int index;
+        int index, calc;
         for(Pixel pixel : pixels) {
-            index = (pixel.getRealX() + pixel.getRealY() * width) * 3;
-            RGBs[index    ] = pixel.getColor().getRed()   / 255.f;
-            RGBs[index + 1] = pixel.getColor().getGreen() / 255.f;
-            RGBs[index + 2] = pixel.getColor().getBlue()  / 255.f;
+            index = (pixel.getRealX() + pixel.getRealY() * realWidth) * 3;
+            for(int y = 0; y < size; y++) {
+                for(int x = 0; x < size * 3; x += 3) {
+                    calc = index - (realWidth * 3 * y) + x;
+                    RGBs[calc    ] = pixel.getColor().getRed()   / 255.f;
+                    RGBs[calc + 1] = pixel.getColor().getGreen() / 255.f;
+                    RGBs[calc + 2] = pixel.getColor().getBlue()  / 255.f;
+                }
+            }
+
         }
     }
 

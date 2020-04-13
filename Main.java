@@ -19,9 +19,16 @@ import static org.lwjgl.system.MemoryUtil.*;
 public class Main {
 
     private long window;
-    private final int WIDTH = 640, HEIGHT= 480;
+    private final int WIDTH, HEIGHT, SIZE;
     private PixelEngine pixelEngine;
     private Example example;
+
+    public Main(int WIDTH, int HEIGHT, int SIZE) {
+        if(WIDTH%SIZE != 0 || HEIGHT%SIZE != 0) System.exit(0);
+        this.WIDTH = WIDTH;
+        this.HEIGHT = HEIGHT;
+        this.SIZE = SIZE;
+    }
 
     public void run() {
         setup();
@@ -103,7 +110,7 @@ public class Main {
     }
 
     private void init() {
-        pixelEngine = new PixelEngine(WIDTH, HEIGHT);
+        pixelEngine = new PixelEngine(WIDTH, HEIGHT, SIZE);
         example = new Example(pixelEngine);
     }
 
@@ -120,6 +127,6 @@ public class Main {
     }
 
     public static void main(String[] args) {
-        new Main().run();
+        new Main(600, 600, 6).run();
     }
 }
