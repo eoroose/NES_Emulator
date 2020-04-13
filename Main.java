@@ -1,6 +1,6 @@
 import java.nio.IntBuffer;
 
-//import Example.Example;
+import Example.Example;
 import org.lwjgl.opengl.GL;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.system.MemoryStack;
@@ -8,7 +8,7 @@ import org.lwjgl.glfw.Callbacks;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.glfw.GLFWVidMode;
-//import pixelEngine.PixelEngine;
+import PixelEngine.PixelEngine;
 
 import static org.lwjgl.opengles.GLES20.GL_COLOR_BUFFER_BIT;
 import static org.lwjgl.opengles.GLES20.GL_DEPTH_BUFFER_BIT;
@@ -19,8 +19,8 @@ public class Main {
 
     private long window;
     private final int WIDTH = 640, HEIGHT= 480;
-    //private PixelEngine pixelEngine;
-    //private Example example;
+    private PixelEngine pixelEngine;
+    private Example example;
 
     public void run() {
         setup();
@@ -101,18 +101,18 @@ public class Main {
     }
 
     private void init() {
-        //pixelEngine = new PixelEngine(WIDTH, HEIGHT);
-        //example = new Example(pixelEngine);
+        pixelEngine = new PixelEngine(WIDTH, HEIGHT);
+        example = new Example(pixelEngine);
     }
 
     private void tick() {
-        //pixelEngine.tick();
-        //example.tick();
+        pixelEngine.tick();
+        example.tick();
     }
 
     private void render() {
         GL11.glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-        //pixelEngine.render();
+        pixelEngine.render();
         GLFW.glfwSwapBuffers(window);
         GLFW.glfwPollEvents();
     }
