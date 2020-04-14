@@ -127,6 +127,6 @@ public class Main {
     }
 
     public static void main(String[] args) {
-        new Main(600, 600, 6).run();
+        new Main(600, 600, 1).run();
     }
 }
