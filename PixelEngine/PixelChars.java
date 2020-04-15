@@ -1,14 +1,13 @@
 package PixelEngine;
 
 /*
-      0 1 2 3 4 5
-   0 | | | | | | |
-   1 | |#|#|#| | |
-   2 |#| | | |#| |
-   3 |#| | | |#| |
-   4 |#|#|#|#|#| |                   y  x
-   5 |#| | | |#| |      first #  --> 1, 1 --> (1*size-cols) + 1*size
-   6 |#| | | |#| |      second # --> 1, 2 --> (1*size-cols) + 2*size ...
+      0 1 2 3 4
+   0 | |#|#|#| |
+   1 |#| | | |#|
+   2 |#| | | |#|
+   3 |#|#|#|#|#|                   x  y
+   4 |#| | | |#|      first #  --> 1, 0 --> start + width*cols + rows + 1*size + 0*width*size
+   5 |#| | | |#|      second # --> 2, 0 --> start + width*cols + rows + 2*size + 0*width*size ...
  */
 public class PixelChars {
 
@@ -20,22 +19,22 @@ public class PixelChars {
         int index = 0;
         for(int cols = 0; cols < size; cols++) {
             for(int rows= 0; rows < size; rows++) {
-                pixels[index++] = pixelScreen[start + width*(  size-cols) +   size + rows];
-                pixels[index++] = pixelScreen[start + width*(  size-cols) + 2*size + rows];
-                pixels[index++] = pixelScreen[start + width*(  size-cols) + 3*size + rows];
-                pixels[index++] = pixelScreen[start + width*(2*size-cols)          + rows];
-                pixels[index++] = pixelScreen[start + width*(2*size-cols) + 4*size + rows];
-                pixels[index++] = pixelScreen[start + width*(3*size-cols)          + rows];
-                pixels[index++] = pixelScreen[start + width*(3*size-cols) + 4*size + rows];
-                pixels[index++] = pixelScreen[start + width*(4*size-cols)          + rows];
-                pixels[index++] = pixelScreen[start + width*(4*size-cols) +   size + rows];
-                pixels[index++] = pixelScreen[start + width*(4*size-cols) + 2*size + rows];
-                pixels[index++] = pixelScreen[start + width*(4*size-cols) + 3*size + rows];
-                pixels[index++] = pixelScreen[start + width*(4*size-cols) + 4*size + rows];
-                pixels[index++] = pixelScreen[start + width*(5*size-cols)          + rows];
-                pixels[index++] = pixelScreen[start + width*(5*size-cols) + 4*size + rows];
-                pixels[index++] = pixelScreen[start + width*(6*size-cols)          + rows];
-                pixels[index++] = pixelScreen[start + width*(6*size-cols) + 4*size + rows];
+                pixels[index++] = pixelScreen[start + width*cols + rows +   size];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 2*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 3*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows +            width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 4*size +   width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows +          2*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 4*size + 2*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows +          3*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows +   size + 3*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 2*size + 3*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 3*size + 3*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 4*size + 3*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows +          4*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 4*size + 4*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows +          5*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 4*size + 5*width*size];
             }
         }
         return pixels;
@@ -49,24 +48,24 @@ public class PixelChars {
         int index = 0;
         for(int cols = 0; cols < size; cols++) {
             for(int rows= 0; rows < size; rows++) {
-                pixels[index++] = pixelScreen[start + width*(  size-cols)          + rows];
-                pixels[index++] = pixelScreen[start + width*(  size-cols) +   size + rows];
-                pixels[index++] = pixelScreen[start + width*(  size-cols) + 2*size + rows];
-                pixels[index++] = pixelScreen[start + width*(  size-cols) + 3*size + rows];
-                pixels[index++] = pixelScreen[start + width*(2*size-cols)          + rows];
-                pixels[index++] = pixelScreen[start + width*(2*size-cols) + 4*size + rows];
-                pixels[index++] = pixelScreen[start + width*(3*size-cols)          + rows];
-                pixels[index++] = pixelScreen[start + width*(3*size-cols) +   size + rows];
-                pixels[index++] = pixelScreen[start + width*(3*size-cols) + 2*size + rows];
-                pixels[index++] = pixelScreen[start + width*(3*size-cols) + 3*size + rows];
-                pixels[index++] = pixelScreen[start + width*(4*size-cols)          + rows];
-                pixels[index++] = pixelScreen[start + width*(4*size-cols) + 4*size + rows];
-                pixels[index++] = pixelScreen[start + width*(5*size-cols)          + rows];
-                pixels[index++] = pixelScreen[start + width*(5*size-cols) + 4*size + rows];
-                pixels[index++] = pixelScreen[start + width*(6*size-cols)          + rows];
-                pixels[index++] = pixelScreen[start + width*(6*size-cols) +   size + rows];
-                pixels[index++] = pixelScreen[start + width*(6*size-cols) + 2*size + rows];
-                pixels[index++] = pixelScreen[start + width*(6*size-cols) + 3*size + rows];
+                pixels[index++] = pixelScreen[start + width*cols + rows];
+                pixels[index++] = pixelScreen[start + width*cols + rows +   size];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 2*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 3*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows +             width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 4*size +    width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows +           2*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows +   size +  2*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 2*size +  2*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 3*size +  2*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows +           3*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 4*size +  3*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows +           4*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 4*size +  4*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows +           5*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows +   size +  5*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 2*size +  5*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 3*size +  5*width*size];
             }
         }
         return pixels;
@@ -80,18 +79,18 @@ public class PixelChars {
         int index = 0;
         for(int cols = 0; cols < size; cols++) {
             for(int rows= 0; rows < size; rows++) {
-                pixels[index++] = pixelScreen[start + width*(  size-cols) +   size + rows];
-                pixels[index++] = pixelScreen[start + width*(  size-cols) + 2*size + rows];
-                pixels[index++] = pixelScreen[start + width*(  size-cols) + 3*size + rows];
-                pixels[index++] = pixelScreen[start + width*(2*size-cols)          + rows];
-                pixels[index++] = pixelScreen[start + width*(2*size-cols) + 4*size + rows];
-                pixels[index++] = pixelScreen[start + width*(3*size-cols)          + rows];
-                pixels[index++] = pixelScreen[start + width*(4*size-cols)          + rows];
-                pixels[index++] = pixelScreen[start + width*(5*size-cols)          + rows];
-                pixels[index++] = pixelScreen[start + width*(5*size-cols) + 4*size + rows];
-                pixels[index++] = pixelScreen[start + width*(6*size-cols) +   size + rows];
-                pixels[index++] = pixelScreen[start + width*(6*size-cols) + 2*size + rows];
-                pixels[index++] = pixelScreen[start + width*(6*size-cols) + 3*size + rows];
+                pixels[index++] = pixelScreen[start + width*cols + rows +   size];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 2*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 3*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows +            width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 4*size +   width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows +          2*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows +          3*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows +          4*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 4*size + 4*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows +   size + 5*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 2*size + 5*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 3*size + 5*width*size];
             }
         }
         return pixels;
@@ -105,22 +104,22 @@ public class PixelChars {
         int index = 0;
         for(int cols = 0; cols < size; cols++) {
             for(int rows= 0; rows < size; rows++) {
-                pixels[index++] = pixelScreen[start + width*(  size-cols)          + rows];
-                pixels[index++] = pixelScreen[start + width*(  size-cols) +   size + rows];
-                pixels[index++] = pixelScreen[start + width*(  size-cols) + 2*size + rows];
-                pixels[index++] = pixelScreen[start + width*(  size-cols) + 3*size + rows];
-                pixels[index++] = pixelScreen[start + width*(2*size-cols)          + rows];
-                pixels[index++] = pixelScreen[start + width*(2*size-cols) + 4*size + rows];
-                pixels[index++] = pixelScreen[start + width*(3*size-cols)          + rows];
-                pixels[index++] = pixelScreen[start + width*(3*size-cols) + 4*size + rows];
-                pixels[index++] = pixelScreen[start + width*(4*size-cols)          + rows];
-                pixels[index++] = pixelScreen[start + width*(4*size-cols) + 4*size + rows];
-                pixels[index++] = pixelScreen[start + width*(5*size-cols)          + rows];
-                pixels[index++] = pixelScreen[start + width*(5*size-cols) + 4*size + rows];
-                pixels[index++] = pixelScreen[start + width*(6*size-cols)          + rows];
-                pixels[index++] = pixelScreen[start + width*(6*size-cols) +   size + rows];
-                pixels[index++] = pixelScreen[start + width*(6*size-cols) + 2*size + rows];
-                pixels[index++] = pixelScreen[start + width*(6*size-cols) + 3*size + rows];
+                pixels[index++] = pixelScreen[start + width*cols + rows];
+                pixels[index++] = pixelScreen[start + width*cols + rows +   size];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 2*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 3*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows          +   width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 4*size +   width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows +          2*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 4*size + 2*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows +          3*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 4*size + 3*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows +          4*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 4*size + 4*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows +          5*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows + size +   5*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 2*size + 5*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 3*size + 5*width*size];
             }
         }
         return pixels;
@@ -134,23 +133,23 @@ public class PixelChars {
         int index = 0;
         for(int cols = 0; cols < size; cols++) {
             for(int rows= 0; rows < size; rows++) {
-                pixels[index++] = pixelScreen[start + width*(  size-cols)          + rows];
-                pixels[index++] = pixelScreen[start + width*(  size-cols) +   size + rows];
-                pixels[index++] = pixelScreen[start + width*(  size-cols) + 2*size + rows];
-                pixels[index++] = pixelScreen[start + width*(  size-cols) + 3*size + rows];
-                pixels[index++] = pixelScreen[start + width*(  size-cols) + 4*size + rows];
-                pixels[index++] = pixelScreen[start + width*(2*size-cols)          + rows];
-                pixels[index++] = pixelScreen[start + width*(3*size-cols)          + rows];
-                pixels[index++] = pixelScreen[start + width*(3*size-cols) +   size + rows];
-                pixels[index++] = pixelScreen[start + width*(3*size-cols) + 2*size + rows];
-                pixels[index++] = pixelScreen[start + width*(3*size-cols) + 3*size + rows];
-                pixels[index++] = pixelScreen[start + width*(4*size-cols)          + rows];
-                pixels[index++] = pixelScreen[start + width*(5*size-cols)          + rows];
-                pixels[index++] = pixelScreen[start + width*(6*size-cols)          + rows];
-                pixels[index++] = pixelScreen[start + width*(6*size-cols) +   size + rows];
-                pixels[index++] = pixelScreen[start + width*(6*size-cols) + 2*size + rows];
-                pixels[index++] = pixelScreen[start + width*(6*size-cols) + 3*size + rows];
-                pixels[index++] = pixelScreen[start + width*(6*size-cols) + 4*size + rows];
+                pixels[index++] = pixelScreen[start + width*cols + rows];
+                pixels[index++] = pixelScreen[start + width*cols + rows +   size];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 2*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 3*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 4*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows +            width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows +          2*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows +   size + 2*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 2*size + 2*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 3*size + 2*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows +          3*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows +          4*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows +          5*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows +   size + 5*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 2*size + 5*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 3*size + 5*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 4*size + 5*width*size];
             }
         }
         return pixels;
@@ -164,19 +163,19 @@ public class PixelChars {
         int index = 0;
         for(int cols = 0; cols < size; cols++) {
             for(int rows= 0; rows < size; rows++) {
-                pixels[index++] = pixelScreen[start + width*(  size-cols)          + rows];
-                pixels[index++] = pixelScreen[start + width*(  size-cols) +   size + rows];
-                pixels[index++] = pixelScreen[start + width*(  size-cols) + 2*size + rows];
-                pixels[index++] = pixelScreen[start + width*(  size-cols) + 3*size + rows];
-                pixels[index++] = pixelScreen[start + width*(  size-cols) + 4*size + rows];
-                pixels[index++] = pixelScreen[start + width*(2*size-cols)          + rows];
-                pixels[index++] = pixelScreen[start + width*(3*size-cols)          + rows];
-                pixels[index++] = pixelScreen[start + width*(3*size-cols) +   size + rows];
-                pixels[index++] = pixelScreen[start + width*(3*size-cols) + 2*size + rows];
-                pixels[index++] = pixelScreen[start + width*(3*size-cols) + 3*size + rows];
-                pixels[index++] = pixelScreen[start + width*(4*size-cols)          + rows];
-                pixels[index++] = pixelScreen[start + width*(5*size-cols)          + rows];
-                pixels[index++] = pixelScreen[start + width*(6*size-cols)          + rows];
+                pixels[index++] = pixelScreen[start + width*cols + rows];
+                pixels[index++] = pixelScreen[start + width*cols + rows +  size];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 2*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 3*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 4*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows +            width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows +          2*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows +   size + 2*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 2*size + 2*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 3*size + 2*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows +          3*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows +          4*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows +          5*width*size];
             }
         }
         return pixels;
@@ -190,20 +189,20 @@ public class PixelChars {
         int index = 0;
         for(int cols = 0; cols < size; cols++) {
             for(int rows= 0; rows < size; rows++) {
-                pixels[index++] = pixelScreen[start + width*(  size-cols) +   size + rows];
-                pixels[index++] = pixelScreen[start + width*(  size-cols) + 2*size + rows];
-                pixels[index++] = pixelScreen[start + width*(  size-cols) + 3*size + rows];
-                pixels[index++] = pixelScreen[start + width*(2*size-cols)          + rows];
-                pixels[index++] = pixelScreen[start + width*(2*size-cols) + 4*size + rows];
-                pixels[index++] = pixelScreen[start + width*(3*size-cols)          + rows];
-                pixels[index++] = pixelScreen[start + width*(4*size-cols)          + rows];
-                pixels[index++] = pixelScreen[start + width*(4*size-cols) + 3*size + rows];
-                pixels[index++] = pixelScreen[start + width*(4*size-cols) + 4*size + rows];
-                pixels[index++] = pixelScreen[start + width*(5*size-cols)          + rows];
-                pixels[index++] = pixelScreen[start + width*(5*size-cols) + 4*size + rows];
-                pixels[index++] = pixelScreen[start + width*(6*size-cols) +   size + rows];
-                pixels[index++] = pixelScreen[start + width*(6*size-cols) + 2*size + rows];
-                pixels[index++] = pixelScreen[start + width*(6*size-cols) + 3*size + rows];
+                pixels[index++] = pixelScreen[start + width*cols + rows +   size];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 2*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 3*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows +            width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 4*size +   width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows +          2*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows +          3*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 3*size + 3*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 4*size + 3*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows +          4*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 4*size + 4*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows +   size + 5*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 2*size + 5*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 3*size + 5*width*size];
             }
         }
         return pixels;
@@ -217,21 +216,21 @@ public class PixelChars {
         int index = 0;
         for(int cols = 0; cols < size; cols++) {
             for(int rows= 0; rows < size; rows++) {
-                pixels[index++] = pixelScreen[start + width*(  size-cols)          + rows];
-                pixels[index++] = pixelScreen[start + width*(  size-cols) + 4*size + rows];
-                pixels[index++] = pixelScreen[start + width*(2*size-cols)          + rows];
-                pixels[index++] = pixelScreen[start + width*(2*size-cols) + 4*size + rows];
-                pixels[index++] = pixelScreen[start + width*(3*size-cols)          + rows];
-                pixels[index++] = pixelScreen[start + width*(3*size-cols) + 4*size + rows];
-                pixels[index++] = pixelScreen[start + width*(4*size-cols)          + rows];
-                pixels[index++] = pixelScreen[start + width*(4*size-cols) +   size + rows];
-                pixels[index++] = pixelScreen[start + width*(4*size-cols) + 2*size + rows];
-                pixels[index++] = pixelScreen[start + width*(4*size-cols) + 3*size + rows];
-                pixels[index++] = pixelScreen[start + width*(4*size-cols) + 4*size + rows];
-                pixels[index++] = pixelScreen[start + width*(5*size-cols)          + rows];
-                pixels[index++] = pixelScreen[start + width*(5*size-cols) + 4*size + rows];
-                pixels[index++] = pixelScreen[start + width*(6*size-cols)          + rows];
-                pixels[index++] = pixelScreen[start + width*(6*size-cols) + 4*size + rows];
+                pixels[index++] = pixelScreen[start + width*cols + rows];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 4*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows +            width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 4*size +   width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows +          2*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 4*size + 2*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows +          3*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows +   size + 3*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 2*size + 3*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 3*size + 3*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 4*size + 3*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows +          4*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 4*size + 4*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows +          5*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 4*size + 5*width*size];
             }
         }
         return pixels;
@@ -245,20 +244,20 @@ public class PixelChars {
         int index = 0;
         for(int cols = 0; cols < size; cols++) {
             for(int rows= 0; rows < size; rows++) {
-                pixels[index++] = pixelScreen[start + width*(  size-cols)          + rows];
-                pixels[index++] = pixelScreen[start + width*(  size-cols) +   size + rows];
-                pixels[index++] = pixelScreen[start + width*(  size-cols) + 2*size + rows];
-                pixels[index++] = pixelScreen[start + width*(  size-cols) + 3*size + rows];
-                pixels[index++] = pixelScreen[start + width*(  size-cols) + 4*size + rows];
-                pixels[index++] = pixelScreen[start + width*(2*size-cols) + 2*size + rows];
-                pixels[index++] = pixelScreen[start + width*(3*size-cols) + 2*size + rows];
-                pixels[index++] = pixelScreen[start + width*(4*size-cols) + 2*size + rows];
-                pixels[index++] = pixelScreen[start + width*(5*size-cols) + 2*size + rows];
-                pixels[index++] = pixelScreen[start + width*(6*size-cols)          + rows];
-                pixels[index++] = pixelScreen[start + width*(6*size-cols) +   size + rows];
-                pixels[index++] = pixelScreen[start + width*(6*size-cols) + 2*size + rows];
-                pixels[index++] = pixelScreen[start + width*(6*size-cols) + 3*size + rows];
-                pixels[index++] = pixelScreen[start + width*(6*size-cols) + 4*size + rows];
+                pixels[index++] = pixelScreen[start + width*cols + rows];
+                pixels[index++] = pixelScreen[start + width*cols + rows +   size];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 2*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 3*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 4*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 2*size +   width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 2*size + 2*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 2*size + 3*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 2*size + 4*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows +          5*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows +   size + 5*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 2*size + 5*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 3*size + 5*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 4*size + 5*width*size];
             }
         }
         return pixels;
@@ -272,18 +271,18 @@ public class PixelChars {
         int index = 0;
         for(int cols = 0; cols < size; cols++) {
             for(int rows= 0; rows < size; rows++) {
-                pixels[index++] = pixelScreen[start + width*(  size-cols)          + rows];
-                pixels[index++] = pixelScreen[start + width*(  size-cols) +   size + rows];
-                pixels[index++] = pixelScreen[start + width*(  size-cols) + 2*size + rows];
-                pixels[index++] = pixelScreen[start + width*(  size-cols) + 3*size + rows];
-                pixels[index++] = pixelScreen[start + width*(  size-cols) + 4*size + rows];
-                pixels[index++] = pixelScreen[start + width*(2*size-cols) + 3*size + rows];
-                pixels[index++] = pixelScreen[start + width*(3*size-cols) + 3*size + rows];
-                pixels[index++] = pixelScreen[start + width*(4*size-cols) + 3*size + rows];
-                pixels[index++] = pixelScreen[start + width*(5*size-cols)          + rows];
-                pixels[index++] = pixelScreen[start + width*(5*size-cols) + 3*size + rows];
-                pixels[index++] = pixelScreen[start + width*(6*size-cols) +   size + rows];
-                pixels[index++] = pixelScreen[start + width*(6*size-cols) + 2*size + rows];
+                pixels[index++] = pixelScreen[start + width*cols + rows];
+                pixels[index++] = pixelScreen[start + width*cols + rows +   size];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 2*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 3*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 4*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 3*size +   width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 3*size + 2*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 3*size + 3*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows +          4*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 3*size + 4*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows +   size + 5*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 2*size + 5*width*size];
             }
         }
         return pixels;
@@ -297,18 +296,18 @@ public class PixelChars {
         int index = 0;
         for(int cols = 0; cols < size; cols++) {
             for(int rows= 0; rows < size; rows++) {
-                pixels[index++] = pixelScreen[start + width*(  size-cols)          + rows];
-                pixels[index++] = pixelScreen[start + width*(  size-cols) + 3*size + rows];
-                pixels[index++] = pixelScreen[start + width*(2*size-cols)          + rows];
-                pixels[index++] = pixelScreen[start + width*(2*size-cols) + 2*size + rows];
-                pixels[index++] = pixelScreen[start + width*(3*size-cols)          + rows];
-                pixels[index++] = pixelScreen[start + width*(3*size-cols) +   size + rows];
-                pixels[index++] = pixelScreen[start + width*(4*size-cols)          + rows];
-                pixels[index++] = pixelScreen[start + width*(4*size-cols) + 2*size + rows];
-                pixels[index++] = pixelScreen[start + width*(5*size-cols)          + rows];
-                pixels[index++] = pixelScreen[start + width*(5*size-cols) + 3*size + rows];
-                pixels[index++] = pixelScreen[start + width*(6*size-cols)          + rows];
-                pixels[index++] = pixelScreen[start + width*(6*size-cols) + 4*size + rows];
+                pixels[index++] = pixelScreen[start + width*cols + rows];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 3*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows +            width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 2*size +   width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows +          2*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows +   size + 2*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows +          3*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 2*size + 3*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows +          4*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 3*size + 4*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows +          5*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 4*size + 5*width*size];
             }
         }
         return pixels;
@@ -322,16 +321,16 @@ public class PixelChars {
         int index = 0;
         for(int cols = 0; cols < size; cols++) {
             for(int rows= 0; rows < size; rows++) {
-                pixels[index++] = pixelScreen[start + width*(  size-cols)          + rows];
-                pixels[index++] = pixelScreen[start + width*(2*size-cols)          + rows];
-                pixels[index++] = pixelScreen[start + width*(3*size-cols)          + rows];
-                pixels[index++] = pixelScreen[start + width*(4*size-cols)          + rows];
-                pixels[index++] = pixelScreen[start + width*(5*size-cols)          + rows];
-                pixels[index++] = pixelScreen[start + width*(6*size-cols)          + rows];
-                pixels[index++] = pixelScreen[start + width*(6*size-cols) +   size + rows];
-                pixels[index++] = pixelScreen[start + width*(6*size-cols) + 2*size + rows];
-                pixels[index++] = pixelScreen[start + width*(6*size-cols) + 3*size + rows];
-                pixels[index++] = pixelScreen[start + width*(6*size-cols) + 4*size + rows];
+                pixels[index++] = pixelScreen[start + width*cols + rows];
+                pixels[index++] = pixelScreen[start + width*cols + rows +            width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows +          2*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows +          3*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows +          4*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows +          5*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows +   size + 5*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 2*size + 5*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 3*size + 5*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 4*size + 5*width*size];
             }
         }
         return pixels;
@@ -345,21 +344,21 @@ public class PixelChars {
         int index = 0;
         for(int cols = 0; cols < size; cols++) {
             for(int rows= 0; rows < size; rows++) {
-                pixels[index++] = pixelScreen[start + width*(  size-cols)          + rows];
-                pixels[index++] = pixelScreen[start + width*(  size-cols) + 4*size + rows];
-                pixels[index++] = pixelScreen[start + width*(2*size-cols)          + rows];
-                pixels[index++] = pixelScreen[start + width*(2*size-cols) +   size + rows];
-                pixels[index++] = pixelScreen[start + width*(2*size-cols) + 3*size + rows];
-                pixels[index++] = pixelScreen[start + width*(2*size-cols) + 4*size + rows];
-                pixels[index++] = pixelScreen[start + width*(3*size-cols)          + rows];
-                pixels[index++] = pixelScreen[start + width*(3*size-cols) + 2*size + rows];
-                pixels[index++] = pixelScreen[start + width*(3*size-cols) + 4*size + rows];
-                pixels[index++] = pixelScreen[start + width*(4*size-cols)          + rows];
-                pixels[index++] = pixelScreen[start + width*(4*size-cols) + 4*size + rows];
-                pixels[index++] = pixelScreen[start + width*(5*size-cols)          + rows];
-                pixels[index++] = pixelScreen[start + width*(5*size-cols) + 4*size + rows];
-                pixels[index++] = pixelScreen[start + width*(6*size-cols)          + rows];
-                pixels[index++] = pixelScreen[start + width*(6*size-cols) + 4*size + rows];
+                pixels[index++] = pixelScreen[start + width*cols + rows];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 4*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows +            width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows +   size +   width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 3*size +   width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 4*size +   width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows +          2*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 2*size + 2*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 4*size + 2*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows +          3*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 4*size + 3*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows +          4*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 4*size + 4*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows +          5*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 4*size + 5*width*size];
             }
         }
         return pixels;
@@ -373,21 +372,21 @@ public class PixelChars {
         int index = 0;
         for(int cols = 0; cols < size; cols++) {
             for(int rows= 0; rows < size; rows++) {
-                pixels[index++] = pixelScreen[start + width*(  size-cols)          + rows];
-                pixels[index++] = pixelScreen[start + width*(  size-cols) + 4*size + rows];
-                pixels[index++] = pixelScreen[start + width*(2*size-cols)          + rows];
-                pixels[index++] = pixelScreen[start + width*(2*size-cols) +   size + rows];
-                pixels[index++] = pixelScreen[start + width*(2*size-cols) + 4*size + rows];
-                pixels[index++] = pixelScreen[start + width*(3*size-cols)          + rows];
-                pixels[index++] = pixelScreen[start + width*(3*size-cols) + 2*size + rows];
-                pixels[index++] = pixelScreen[start + width*(3*size-cols) + 4*size + rows];
-                pixels[index++] = pixelScreen[start + width*(4*size-cols)          + rows];
-                pixels[index++] = pixelScreen[start + width*(4*size-cols) + 3*size + rows];
-                pixels[index++] = pixelScreen[start + width*(4*size-cols) + 4*size + rows];
-                pixels[index++] = pixelScreen[start + width*(5*size-cols)          + rows];
-                pixels[index++] = pixelScreen[start + width*(5*size-cols) + 4*size + rows];
-                pixels[index++] = pixelScreen[start + width*(6*size-cols)          + rows];
-                pixels[index++] = pixelScreen[start + width*(6*size-cols) + 4*size + rows];
+                pixels[index++] = pixelScreen[start + width*cols + rows];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 4*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows +            width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows +   size +   width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 4*size +   width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows +          2*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 2*size + 2*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 4*size + 2*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows +          3*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 3*size + 3*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 4*size + 3*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows +          4*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 4*size + 4*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows +          5*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 4*size + 5*width*size];
             }
         }
         return pixels;
@@ -401,20 +400,20 @@ public class PixelChars {
         int index = 0;
         for(int cols = 0; cols < size; cols++) {
             for(int rows= 0; rows < size; rows++) {
-                pixels[index++] = pixelScreen[start + width*(  size-cols) +   size + rows];
-                pixels[index++] = pixelScreen[start + width*(  size-cols) + 2*size + rows];
-                pixels[index++] = pixelScreen[start + width*(  size-cols) + 3*size + rows];
-                pixels[index++] = pixelScreen[start + width*(2*size-cols)          + rows];
-                pixels[index++] = pixelScreen[start + width*(2*size-cols) + 4*size + rows];
-                pixels[index++] = pixelScreen[start + width*(3*size-cols)          + rows];
-                pixels[index++] = pixelScreen[start + width*(3*size-cols) + 4*size + rows];
-                pixels[index++] = pixelScreen[start + width*(4*size-cols)          + rows];
-                pixels[index++] = pixelScreen[start + width*(4*size-cols) + 4*size + rows];
-                pixels[index++] = pixelScreen[start + width*(5*size-cols)          + rows];
-                pixels[index++] = pixelScreen[start + width*(5*size-cols) + 4*size + rows];
-                pixels[index++] = pixelScreen[start + width*(6*size-cols) +   size + rows];
-                pixels[index++] = pixelScreen[start + width*(6*size-cols) + 2*size + rows];
-                pixels[index++] = pixelScreen[start + width*(6*size-cols) + 3*size + rows];
+                pixels[index++] = pixelScreen[start + width*cols + rows +   size];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 2*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 3*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows +            width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 4*size +   width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows +          2*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 4*size + 2*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows +          3*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 4*size + 3*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows +          4*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 4*size + 4*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows +   size + 5*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 2*size + 5*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 3*size + 5*width*size];
             }
         }
         return pixels;
@@ -428,19 +427,19 @@ public class PixelChars {
         int index = 0;
         for(int cols = 0; cols < size; cols++) {
             for(int rows= 0; rows < size; rows++) {
-                pixels[index++] = pixelScreen[start + width*(  size-cols)          + rows];
-                pixels[index++] = pixelScreen[start + width*(  size-cols) +   size + rows];
-                pixels[index++] = pixelScreen[start + width*(  size-cols) + 2*size + rows];
-                pixels[index++] = pixelScreen[start + width*(  size-cols) + 3*size + rows];
-                pixels[index++] = pixelScreen[start + width*(2*size-cols)          + rows];
-                pixels[index++] = pixelScreen[start + width*(2*size-cols) + 4*size + rows];
-                pixels[index++] = pixelScreen[start + width*(3*size-cols)          + rows];
-                pixels[index++] = pixelScreen[start + width*(3*size-cols) +   size + rows];
-                pixels[index++] = pixelScreen[start + width*(3*size-cols) + 2*size + rows];
-                pixels[index++] = pixelScreen[start + width*(3*size-cols) + 3*size + rows];
-                pixels[index++] = pixelScreen[start + width*(4*size-cols)          + rows];
-                pixels[index++] = pixelScreen[start + width*(5*size-cols)          + rows];
-                pixels[index++] = pixelScreen[start + width*(6*size-cols)          + rows];
+                pixels[index++] = pixelScreen[start + width*cols + rows];
+                pixels[index++] = pixelScreen[start + width*cols + rows +   size];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 2*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 3*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows +            width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 4*size +   width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows +          2*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows +   size + 2*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 2*size + 2*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 3*size + 2*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows +          3*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows +          4*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows +          5*width*size];
             }
         }
         return pixels;
@@ -454,21 +453,21 @@ public class PixelChars {
         int index = 0;
         for(int cols = 0; cols < size; cols++) {
             for(int rows= 0; rows < size; rows++) {
-                pixels[index++] = pixelScreen[start + width*(  size-cols) +   size + rows];
-                pixels[index++] = pixelScreen[start + width*(  size-cols) + 2*size + rows];
-                pixels[index++] = pixelScreen[start + width*(  size-cols) + 3*size + rows];
-                pixels[index++] = pixelScreen[start + width*(2*size-cols)          + rows];
-                pixels[index++] = pixelScreen[start + width*(2*size-cols) + 4*size + rows];
-                pixels[index++] = pixelScreen[start + width*(3*size-cols)          + rows];
-                pixels[index++] = pixelScreen[start + width*(3*size-cols) + 4*size + rows];
-                pixels[index++] = pixelScreen[start + width*(4*size-cols)          + rows];
-                pixels[index++] = pixelScreen[start + width*(4*size-cols) + 2*size + rows];
-                pixels[index++] = pixelScreen[start + width*(4*size-cols) + 4*size + rows];
-                pixels[index++] = pixelScreen[start + width*(5*size-cols)          + rows];
-                pixels[index++] = pixelScreen[start + width*(5*size-cols) + 3*size + rows];
-                pixels[index++] = pixelScreen[start + width*(6*size-cols) +   size + rows];
-                pixels[index++] = pixelScreen[start + width*(6*size-cols) + 2*size + rows];
-                pixels[index++] = pixelScreen[start + width*(6*size-cols) + 4*size + rows];
+                pixels[index++] = pixelScreen[start + width*cols + rows +   size];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 2*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 3*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows +            width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 4*size +   width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows +          2*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 4*size + 2*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows +          3*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 2*size + 3*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 4*size + 3*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows +          4*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 3*size + 4*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows +   size + 5*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 2*size + 5*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 4*size + 5*width*size];
             }
         }
         return pixels;
@@ -482,22 +481,22 @@ public class PixelChars {
         int index = 0;
         for(int cols = 0; cols < size; cols++) {
             for(int rows= 0; rows < size; rows++) {
-                pixels[index++] = pixelScreen[start + width*(  size-cols)          + rows];
-                pixels[index++] = pixelScreen[start + width*(  size-cols) +   size + rows];
-                pixels[index++] = pixelScreen[start + width*(  size-cols) + 2*size + rows];
-                pixels[index++] = pixelScreen[start + width*(  size-cols) + 3*size + rows];
-                pixels[index++] = pixelScreen[start + width*(2*size-cols)          + rows];
-                pixels[index++] = pixelScreen[start + width*(2*size-cols) + 4*size + rows];
-                pixels[index++] = pixelScreen[start + width*(3*size-cols)          + rows];
-                pixels[index++] = pixelScreen[start + width*(3*size-cols) +   size + rows];
-                pixels[index++] = pixelScreen[start + width*(3*size-cols) + 2*size + rows];
-                pixels[index++] = pixelScreen[start + width*(3*size-cols) + 3*size + rows];
-                pixels[index++] = pixelScreen[start + width*(4*size-cols)          + rows];
-                pixels[index++] = pixelScreen[start + width*(4*size-cols) + 4*size + rows];
-                pixels[index++] = pixelScreen[start + width*(5*size-cols)          + rows];
-                pixels[index++] = pixelScreen[start + width*(5*size-cols) + 4*size + rows];
-                pixels[index++] = pixelScreen[start + width*(6*size-cols)          + rows];
-                pixels[index++] = pixelScreen[start + width*(6*size-cols) + 4*size + rows];
+                pixels[index++] = pixelScreen[start + width*cols + rows];
+                pixels[index++] = pixelScreen[start + width*cols + rows +   size];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 2*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 3*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows +            width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 4*size +   width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows +          2*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows +   size + 2*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 2*size + 2*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 3*size + 2*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows +          3*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 4*size + 3*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows +          4*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 4*size + 4*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows +          5*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 4*size + 5*width*size];
             }
         }
         return pixels;
@@ -511,20 +510,20 @@ public class PixelChars {
         int index = 0;
         for(int cols = 0; cols < size; cols++) {
             for(int rows= 0; rows < size; rows++) {
-                pixels[index++] = pixelScreen[start + width*(  size-cols) +   size + rows];
-                pixels[index++] = pixelScreen[start + width*(  size-cols) + 2*size + rows];
-                pixels[index++] = pixelScreen[start + width*(  size-cols) + 3*size + rows];
-                pixels[index++] = pixelScreen[start + width*(  size-cols) + 4*size + rows];
-                pixels[index++] = pixelScreen[start + width*(2*size-cols)          + rows];
-                pixels[index++] = pixelScreen[start + width*(3*size-cols) +   size + rows];
-                pixels[index++] = pixelScreen[start + width*(3*size-cols) + 2*size + rows];
-                pixels[index++] = pixelScreen[start + width*(3*size-cols) + 3*size + rows];
-                pixels[index++] = pixelScreen[start + width*(4*size-cols) + 4*size + rows];
-                pixels[index++] = pixelScreen[start + width*(5*size-cols) + 4*size + rows];
-                pixels[index++] = pixelScreen[start + width*(6*size-cols)          + rows];
-                pixels[index++] = pixelScreen[start + width*(6*size-cols) +   size + rows];
-                pixels[index++] = pixelScreen[start + width*(6*size-cols) + 2*size + rows];
-                pixels[index++] = pixelScreen[start + width*(6*size-cols) + 3*size + rows];
+                pixels[index++] = pixelScreen[start + width*cols + rows +   size];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 2*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 3*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 4*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows +            width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows +   size + 2*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 2*size + 2*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 3*size + 2*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 4*size + 3*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 4*size + 4*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows +          5*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows +   size + 5*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 2*size + 5*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 3*size + 5*width*size];
             }
         }
         return pixels;
@@ -538,16 +537,16 @@ public class PixelChars {
         int index = 0;
         for(int cols = 0; cols < size; cols++) {
             for(int rows= 0; rows < size; rows++) {
-                pixels[index++] = pixelScreen[start + width*(  size-cols)          + rows];
-                pixels[index++] = pixelScreen[start + width*(  size-cols) +   size + rows];
-                pixels[index++] = pixelScreen[start + width*(  size-cols) + 2*size + rows];
-                pixels[index++] = pixelScreen[start + width*(  size-cols) + 3*size + rows];
-                pixels[index++] = pixelScreen[start + width*(  size-cols) + 4*size + rows];
-                pixels[index++] = pixelScreen[start + width*(2*size-cols) + 2*size + rows];
-                pixels[index++] = pixelScreen[start + width*(3*size-cols) + 2*size + rows];
-                pixels[index++] = pixelScreen[start + width*(4*size-cols) + 2*size + rows];
-                pixels[index++] = pixelScreen[start + width*(5*size-cols) + 2*size + rows];
-                pixels[index++] = pixelScreen[start + width*(6*size-cols) + 2*size + rows];
+                pixels[index++] = pixelScreen[start + width*cols + rows];
+                pixels[index++] = pixelScreen[start + width*cols + rows +   size];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 2*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 3*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 4*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 2*size +   width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 2*size + 2*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 2*size + 3*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 2*size + 4*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 2*size + 5*width*size];
             }
         }
         return pixels;
@@ -561,19 +560,19 @@ public class PixelChars {
         int index = 0;
         for(int cols = 0; cols < size; cols++) {
             for(int rows= 0; rows < size; rows++) {
-                pixels[index++] = pixelScreen[start + width*(  size-cols)          + rows];
-                pixels[index++] = pixelScreen[start + width*(  size-cols) + 4*size + rows];
-                pixels[index++] = pixelScreen[start + width*(2*size-cols)          + rows];
-                pixels[index++] = pixelScreen[start + width*(2*size-cols) + 4*size + rows];
-                pixels[index++] = pixelScreen[start + width*(3*size-cols)          + rows];
-                pixels[index++] = pixelScreen[start + width*(3*size-cols) + 4*size + rows];
-                pixels[index++] = pixelScreen[start + width*(4*size-cols)          + rows];
-                pixels[index++] = pixelScreen[start + width*(4*size-cols) + 4*size + rows];
-                pixels[index++] = pixelScreen[start + width*(5*size-cols)          + rows];
-                pixels[index++] = pixelScreen[start + width*(5*size-cols) + 4*size + rows];
-                pixels[index++] = pixelScreen[start + width*(6*size-cols) +   size + rows];
-                pixels[index++] = pixelScreen[start + width*(6*size-cols) + 2*size + rows];
-                pixels[index++] = pixelScreen[start + width*(6*size-cols) + 3*size + rows];
+                pixels[index++] = pixelScreen[start + width*cols + rows];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 4*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows +            width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 4*size +   width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows +          2*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 4*size + 2*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows +          3*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 4*size + 3*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows +          4*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 4*size + 4*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows +   size + 5*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 2*size + 5*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 3*size + 5*width*size];
             }
         }
         return pixels;
@@ -587,17 +586,17 @@ public class PixelChars {
         int index = 0;
         for(int cols = 0; cols < size; cols++) {
             for(int rows= 0; rows < size; rows++) {
-                pixels[index++] = pixelScreen[start + width*(  size-cols)          + rows];
-                pixels[index++] = pixelScreen[start + width*(  size-cols) + 4*size + rows];
-                pixels[index++] = pixelScreen[start + width*(2*size-cols)          + rows];
-                pixels[index++] = pixelScreen[start + width*(2*size-cols) + 4*size + rows];
-                pixels[index++] = pixelScreen[start + width*(3*size-cols)          + rows];
-                pixels[index++] = pixelScreen[start + width*(3*size-cols) + 4*size + rows];
-                pixels[index++] = pixelScreen[start + width*(4*size-cols)          + rows];
-                pixels[index++] = pixelScreen[start + width*(4*size-cols) + 4*size + rows];
-                pixels[index++] = pixelScreen[start + width*(5*size-cols) +   size + rows];
-                pixels[index++] = pixelScreen[start + width*(5*size-cols) + 3*size + rows];
-                pixels[index++] = pixelScreen[start + width*(6*size-cols) + 2*size + rows];
+                pixels[index++] = pixelScreen[start + width*cols + rows];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 4*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows +            width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 4*size +   width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows +          2*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 4*size + 2*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows +          3*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 4*size + 3*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows +   size + 4*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 3*size + 4*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 2*size + 5*width*size];
             }
         }
         return pixels;
@@ -611,21 +610,21 @@ public class PixelChars {
         int index = 0;
         for(int cols = 0; cols < size; cols++) {
             for(int rows= 0; rows < size; rows++) {
-                pixels[index++] = pixelScreen[start + width*(  size-cols)          + rows];
-                pixels[index++] = pixelScreen[start + width*(  size-cols) + 4*size + rows];
-                pixels[index++] = pixelScreen[start + width*(2*size-cols)          + rows];
-                pixels[index++] = pixelScreen[start + width*(2*size-cols) + 4*size + rows];
-                pixels[index++] = pixelScreen[start + width*(3*size-cols)          + rows];
-                pixels[index++] = pixelScreen[start + width*(3*size-cols) + 4*size + rows];
-                pixels[index++] = pixelScreen[start + width*(4*size-cols)          + rows];
-                pixels[index++] = pixelScreen[start + width*(4*size-cols) + 2*size + rows];
-                pixels[index++] = pixelScreen[start + width*(4*size-cols) + 4*size + rows];
-                pixels[index++] = pixelScreen[start + width*(5*size-cols)          + rows];
-                pixels[index++] = pixelScreen[start + width*(5*size-cols) +   size + rows];
-                pixels[index++] = pixelScreen[start + width*(5*size-cols) + 3*size + rows];
-                pixels[index++] = pixelScreen[start + width*(5*size-cols) + 4*size + rows];
-                pixels[index++] = pixelScreen[start + width*(6*size-cols)          + rows];
-                pixels[index++] = pixelScreen[start + width*(6*size-cols) + 4*size + rows];
+                pixels[index++] = pixelScreen[start + width*cols + rows];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 4*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows +            width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 4*size +   width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows +          2*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 4*size + 2*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows +          3*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 2*size + 3*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 4*size + 3*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows +          4*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows +   size + 4*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 3*size + 4*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 4*size + 4*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows +          5*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 4*size + 5*width*size];
             }
         }
         return pixels;
@@ -639,17 +638,17 @@ public class PixelChars {
         int index = 0;
         for(int cols = 0; cols < size; cols++) {
             for(int rows= 0; rows < size; rows++) {
-                pixels[index++] = pixelScreen[start + width*(  size-cols)          + rows];
-                pixels[index++] = pixelScreen[start + width*(  size-cols) + 4*size + rows];
-                pixels[index++] = pixelScreen[start + width*(2*size-cols) +   size + rows];
-                pixels[index++] = pixelScreen[start + width*(2*size-cols) + 3*size + rows];
-                pixels[index++] = pixelScreen[start + width*(3*size-cols) + 2*size + rows];
-                pixels[index++] = pixelScreen[start + width*(4*size-cols) +   size + rows];
-                pixels[index++] = pixelScreen[start + width*(4*size-cols) + 3*size + rows];
-                pixels[index++] = pixelScreen[start + width*(5*size-cols)          + rows];
-                pixels[index++] = pixelScreen[start + width*(5*size-cols) + 4*size + rows];
-                pixels[index++] = pixelScreen[start + width*(6*size-cols)          + rows];
-                pixels[index++] = pixelScreen[start + width*(6*size-cols) + 4*size + rows];
+                pixels[index++] = pixelScreen[start + width*cols + rows];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 4*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows +   size +   width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 3*size +   width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 2*size + 2*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows +   size + 3*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 3*size + 3*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows +          4*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 4*size + 4*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows +          5*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 4*size + 5*width*size];
             }
         }
         return pixels;
@@ -663,15 +662,15 @@ public class PixelChars {
         int index = 0;
         for(int cols = 0; cols < size; cols++) {
             for(int rows= 0; rows < size; rows++) {
-                pixels[index++] = pixelScreen[start + width*(  size-cols)          + rows];
-                pixels[index++] = pixelScreen[start + width*(  size-cols) + 4*size + rows];
-                pixels[index++] = pixelScreen[start + width*(2*size-cols)          + rows];
-                pixels[index++] = pixelScreen[start + width*(2*size-cols) + 4*size + rows];
-                pixels[index++] = pixelScreen[start + width*(3*size-cols) +   size + rows];
-                pixels[index++] = pixelScreen[start + width*(3*size-cols) + 3*size + rows];
-                pixels[index++] = pixelScreen[start + width*(4*size-cols) + 2*size + rows];
-                pixels[index++] = pixelScreen[start + width*(5*size-cols) + 2*size + rows];
-                pixels[index++] = pixelScreen[start + width*(6*size-cols) + 2*size + rows];
+                pixels[index++] = pixelScreen[start + width*cols + rows];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 4*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows +            width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 4*size +   width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows +   size + 2*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 3*size + 2*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 2*size + 3*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 2*size + 4*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 2*size + 5*width*size];
             }
         }
         return pixels;
@@ -685,20 +684,20 @@ public class PixelChars {
         int index = 0;
         for(int cols = 0; cols < size; cols++) {
             for(int rows= 0; rows < size; rows++) {
-                pixels[index++] = pixelScreen[start + width*(  size-cols)          + rows];
-                pixels[index++] = pixelScreen[start + width*(  size-cols) +   size + rows];
-                pixels[index++] = pixelScreen[start + width*(  size-cols) + 2*size + rows];
-                pixels[index++] = pixelScreen[start + width*(  size-cols) + 3*size + rows];
-                pixels[index++] = pixelScreen[start + width*(  size-cols) + 4*size + rows];
-                pixels[index++] = pixelScreen[start + width*(2*size-cols) + 3*size + rows];
-                pixels[index++] = pixelScreen[start + width*(3*size-cols) + 2*size + rows];
-                pixels[index++] = pixelScreen[start + width*(4*size-cols) +   size + rows];
-                pixels[index++] = pixelScreen[start + width*(5*size-cols)          + rows];
-                pixels[index++] = pixelScreen[start + width*(6*size-cols)          + rows];
-                pixels[index++] = pixelScreen[start + width*(6*size-cols) +   size + rows];
-                pixels[index++] = pixelScreen[start + width*(6*size-cols) + 2*size + rows];
-                pixels[index++] = pixelScreen[start + width*(6*size-cols) + 3*size + rows];
-                pixels[index++] = pixelScreen[start + width*(6*size-cols) + 4*size + rows];
+                pixels[index++] = pixelScreen[start + width*cols + rows];
+                pixels[index++] = pixelScreen[start + width*cols + rows +   size];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 2*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 3*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 4*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 3*size +   width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 2*size + 2*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows +   size + 3*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows +          4*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows +          5*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows +   size + 5*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 2*size + 5*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 3*size + 5*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 4*size + 5*width*size];
             }
         }
         return pixels;
@@ -712,24 +711,24 @@ public class PixelChars {
         int index = 0;
         for(int cols = 0; cols < size; cols++) {
             for(int rows= 0; rows < size; rows++) {
-                pixels[index++] = pixelScreen[start + width*(  size-cols) +   size + rows];
-                pixels[index++] = pixelScreen[start + width*(  size-cols) + 2*size + rows];
-                pixels[index++] = pixelScreen[start + width*(  size-cols) + 3*size + rows];
-                pixels[index++] = pixelScreen[start + width*(2*size-cols)          + rows];
-                pixels[index++] = pixelScreen[start + width*(2*size-cols) + 3*size + rows];
-                pixels[index++] = pixelScreen[start + width*(2*size-cols) + 4*size + rows];
-                pixels[index++] = pixelScreen[start + width*(3*size-cols)          + rows];
-                pixels[index++] = pixelScreen[start + width*(3*size-cols) + 2*size + rows];
-                pixels[index++] = pixelScreen[start + width*(3*size-cols) + 4*size + rows];
-                pixels[index++] = pixelScreen[start + width*(4*size-cols)          + rows];
-                pixels[index++] = pixelScreen[start + width*(4*size-cols) + 2*size + rows];
-                pixels[index++] = pixelScreen[start + width*(4*size-cols) + 4*size + rows];
-                pixels[index++] = pixelScreen[start + width*(5*size-cols)          + rows];
-                pixels[index++] = pixelScreen[start + width*(5*size-cols) +   size + rows];
-                pixels[index++] = pixelScreen[start + width*(5*size-cols) + 4*size + rows];
-                pixels[index++] = pixelScreen[start + width*(6*size-cols) +   size + rows];
-                pixels[index++] = pixelScreen[start + width*(6*size-cols) + 2*size + rows];
-                pixels[index++] = pixelScreen[start + width*(6*size-cols) + 3*size + rows];
+                pixels[index++] = pixelScreen[start + width*cols + rows +   size];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 2*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 3*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows +            width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 3*size +   width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 4*size +   width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows +          2*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 2*size + 2*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 4*size + 2*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows +          3*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 2*size + 3*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 4*size + 3*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows +          4*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows +   size + 4*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 4*size + 4*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows +   size + 5*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 2*size + 5*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 3*size + 5*width*size];
             }
         }
         return pixels;
@@ -743,17 +742,17 @@ public class PixelChars {
         int index = 0;
         for(int cols = 0; cols < size; cols++) {
             for(int rows= 0; rows < size; rows++) {
-                pixels[index++] = pixelScreen[start + width*(  size-cols) + 2*size + rows];
-                pixels[index++] = pixelScreen[start + width*(2*size-cols) +   size + rows];
-                pixels[index++] = pixelScreen[start + width*(2*size-cols) + 2*size + rows];
-                pixels[index++] = pixelScreen[start + width*(3*size-cols) + 2*size + rows];
-                pixels[index++] = pixelScreen[start + width*(4*size-cols) + 2*size + rows];
-                pixels[index++] = pixelScreen[start + width*(5*size-cols) + 2*size + rows];
-                pixels[index++] = pixelScreen[start + width*(6*size-cols)          + rows];
-                pixels[index++] = pixelScreen[start + width*(6*size-cols) +   size + rows];
-                pixels[index++] = pixelScreen[start + width*(6*size-cols) + 2*size + rows];
-                pixels[index++] = pixelScreen[start + width*(6*size-cols) + 3*size + rows];
-                pixels[index++] = pixelScreen[start + width*(6*size-cols) + 4*size + rows];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 2*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows +   size +   width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 2*size +   width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 2*size + 2*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 2*size + 3*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 2*size + 4*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows +          5*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows +   size + 5*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 2*size + 5*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 3*size + 5*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 4*size + 5*width*size];
             }
         }
         return pixels;
@@ -767,20 +766,20 @@ public class PixelChars {
         int index = 0;
         for(int cols = 0; cols < size; cols++) {
             for(int rows= 0; rows < size; rows++) {
-                pixels[index++] = pixelScreen[start + width*(  size-cols) +   size + rows];
-                pixels[index++] = pixelScreen[start + width*(  size-cols) + 2*size + rows];
-                pixels[index++] = pixelScreen[start + width*(  size-cols) + 3*size + rows];
-                pixels[index++] = pixelScreen[start + width*(2*size-cols)          + rows];
-                pixels[index++] = pixelScreen[start + width*(2*size-cols) + 4*size + rows];
-                pixels[index++] = pixelScreen[start + width*(3*size-cols) + 3*size + rows];
-                pixels[index++] = pixelScreen[start + width*(4*size-cols) +   size + rows];
-                pixels[index++] = pixelScreen[start + width*(4*size-cols) + 2*size + rows];
-                pixels[index++] = pixelScreen[start + width*(5*size-cols)          + rows];
-                pixels[index++] = pixelScreen[start + width*(6*size-cols)          + rows];
-                pixels[index++] = pixelScreen[start + width*(6*size-cols) +   size + rows];
-                pixels[index++] = pixelScreen[start + width*(6*size-cols) + 2*size + rows];
-                pixels[index++] = pixelScreen[start + width*(6*size-cols) + 3*size + rows];
-                pixels[index++] = pixelScreen[start + width*(6*size-cols) + 4*size + rows];
+                pixels[index++] = pixelScreen[start + width*cols + rows +   size];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 2*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 3*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows +            width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 4*size +   width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 3*size + 2*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows +   size + 3*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 2*size + 3*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows +          4*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows +          5*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows +   size + 5*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 2*size + 5*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 3*size + 5*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 4*size + 5*width*size];
             }
         }
         return pixels;
@@ -794,20 +793,20 @@ public class PixelChars {
         int index = 0;
         for(int cols = 0; cols < size; cols++) {
             for(int rows= 0; rows < size; rows++) {
-                pixels[index++] = pixelScreen[start + width*(  size-cols)          + rows];
-                pixels[index++] = pixelScreen[start + width*(  size-cols) +   size + rows];
-                pixels[index++] = pixelScreen[start + width*(  size-cols) + 2*size + rows];
-                pixels[index++] = pixelScreen[start + width*(  size-cols) + 3*size + rows];
-                pixels[index++] = pixelScreen[start + width*(2*size-cols) + 4*size + rows];
-                pixels[index++] = pixelScreen[start + width*(3*size-cols) +   size + rows];
-                pixels[index++] = pixelScreen[start + width*(3*size-cols) + 2*size + rows];
-                pixels[index++] = pixelScreen[start + width*(3*size-cols) + 3*size + rows];
-                pixels[index++] = pixelScreen[start + width*(4*size-cols) + 4*size + rows];
-                pixels[index++] = pixelScreen[start + width*(5*size-cols) + 4*size + rows];
-                pixels[index++] = pixelScreen[start + width*(6*size-cols)          + rows];
-                pixels[index++] = pixelScreen[start + width*(6*size-cols) +   size + rows];
-                pixels[index++] = pixelScreen[start + width*(6*size-cols) + 2*size + rows];
-                pixels[index++] = pixelScreen[start + width*(6*size-cols) + 3*size + rows];
+                pixels[index++] = pixelScreen[start + width*cols + rows];
+                pixels[index++] = pixelScreen[start + width*cols + rows +   size];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 2*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 3*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 4*size +   width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows +   size + 2*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 2*size + 2*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 3*size + 2*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 4*size + 3*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 4*size + 4*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows +          5*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows +   size + 5*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 2*size + 5*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 3*size + 5*width*size];
             }
         }
         return pixels;
@@ -821,19 +820,19 @@ public class PixelChars {
         int index = 0;
         for(int cols = 0; cols < size; cols++) {
             for(int rows= 0; rows < size; rows++) {
-                pixels[index++] = pixelScreen[start + width*(  size-cols)          + rows];
-                pixels[index++] = pixelScreen[start + width*(  size-cols) + 4*size + rows];
-                pixels[index++] = pixelScreen[start + width*(2*size-cols)          + rows];
-                pixels[index++] = pixelScreen[start + width*(2*size-cols) + 4*size + rows];
-                pixels[index++] = pixelScreen[start + width*(3*size-cols)          + rows];
-                pixels[index++] = pixelScreen[start + width*(3*size-cols) + 4*size + rows];
-                pixels[index++] = pixelScreen[start + width*(4*size-cols)          + rows];
-                pixels[index++] = pixelScreen[start + width*(4*size-cols) +   size + rows];
-                pixels[index++] = pixelScreen[start + width*(4*size-cols) + 2*size + rows];
-                pixels[index++] = pixelScreen[start + width*(4*size-cols) + 3*size + rows];
-                pixels[index++] = pixelScreen[start + width*(4*size-cols) + 4*size + rows];
-                pixels[index++] = pixelScreen[start + width*(5*size-cols) + 4*size + rows];
-                pixels[index++] = pixelScreen[start + width*(6*size-cols) + 4*size + rows];
+                pixels[index++] = pixelScreen[start + width*cols + rows];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 4*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows +            width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 4*size +   width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows +          2*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 4*size + 2*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows +          3*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows +   size + 3*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 2*size + 3*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 3*size + 3*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 4*size + 3*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 4*size + 4*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 4*size + 5*width*size];
             }
         }
         return pixels;
@@ -847,51 +846,50 @@ public class PixelChars {
         int index = 0;
         for(int cols = 0; cols < size; cols++) {
             for(int rows= 0; rows < size; rows++) {
-                pixels[index++] = pixelScreen[start + width*(  size-cols)          + rows];
-                pixels[index++] = pixelScreen[start + width*(  size-cols) +   size + rows];
-                pixels[index++] = pixelScreen[start + width*(  size-cols) + 2*size + rows];
-                pixels[index++] = pixelScreen[start + width*(  size-cols) + 3*size + rows];
-                pixels[index++] = pixelScreen[start + width*(  size-cols) + 4*size + rows];
-                pixels[index++] = pixelScreen[start + width*(2*size-cols)          + rows];
-                pixels[index++] = pixelScreen[start + width*(3*size-cols)          + rows];
-                pixels[index++] = pixelScreen[start + width*(3*size-cols) +   size + rows];
-                pixels[index++] = pixelScreen[start + width*(3*size-cols) + 2*size + rows];
-                pixels[index++] = pixelScreen[start + width*(3*size-cols) + 3*size + rows];
-                pixels[index++] = pixelScreen[start + width*(4*size-cols) + 4*size + rows];
-                pixels[index++] = pixelScreen[start + width*(5*size-cols)          + rows];
-                pixels[index++] = pixelScreen[start + width*(5*size-cols) + 4*size + rows];
-                pixels[index++] = pixelScreen[start + width*(6*size-cols) +   size + rows];
-                pixels[index++] = pixelScreen[start + width*(6*size-cols) + 2*size + rows];
-                pixels[index++] = pixelScreen[start + width*(6*size-cols) + 3*size + rows];
+                pixels[index++] = pixelScreen[start + width*cols + rows];
+                pixels[index++] = pixelScreen[start + width*cols + rows +   size];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 2*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 3*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 4*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows +            width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows +          2*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows +   size + 2*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 2*size + 2*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 3*size + 2*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 4*size + 3*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows +          4*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 4*size + 4*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows +   size + 5*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 2*size + 5*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 3*size + 5*width*size];
             }
         }
         return pixels;
     }
 
     public static Pixel[] SIX(PixelEngine pixelEngine, int x, int y, int size) {
-        Pixel[] pixels = new Pixel[16*size*size];
+        Pixel[] pixels = new Pixel[15*size*size];
         Pixel[] pixelScreen = pixelEngine.getPixels();
         int width = pixelEngine.getWidth();
         int start = x + y * width;
         int index = 0;
         for(int cols = 0; cols < size; cols++) {
             for(int rows= 0; rows < size; rows++) {
-                pixels[index++] = pixelScreen[start + width*(  size-cols) +   size + rows];
-                pixels[index++] = pixelScreen[start + width*(  size-cols) + 2*size + rows];
-                pixels[index++] = pixelScreen[start + width*(  size-cols) + 3*size + rows];
-                pixels[index++] = pixelScreen[start + width*(2*size-cols)          + rows];
-                pixels[index++] = pixelScreen[start + width*(3*size-cols)          + rows];
-                pixels[index++] = pixelScreen[start + width*(3*size-cols) +   size + rows];
-                pixels[index++] = pixelScreen[start + width*(3*size-cols) + 2*size + rows];
-                pixels[index++] = pixelScreen[start + width*(3*size-cols) + 3*size + rows];
-                pixels[index++] = pixelScreen[start + width*(4*size-cols)          + rows];
-                pixels[index++] = pixelScreen[start + width*(4*size-cols) + 4*size + rows];
-                pixels[index++] = pixelScreen[start + width*(5*size-cols)          + rows];
-                pixels[index++] = pixelScreen[start + width*(5*size-cols) + 4*size + rows];
-                pixels[index++] = pixelScreen[start + width*(6*size-cols)          + rows];
-                pixels[index++] = pixelScreen[start + width*(6*size-cols) +   size + rows];
-                pixels[index++] = pixelScreen[start + width*(6*size-cols) + 2*size + rows];
-                pixels[index++] = pixelScreen[start + width*(6*size-cols) + 3*size + rows];
+                pixels[index++] = pixelScreen[start + width*cols + rows +   size];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 2*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 3*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows +            width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows +          2*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows +   size + 2*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 2*size + 2*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 3*size + 2*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows +          3*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 4*size + 3*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows +          4*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 4*size + 4*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows +   size + 5*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 2*size + 5*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 3*size + 5*width*size];
             }
         }
         return pixels;
@@ -905,16 +903,16 @@ public class PixelChars {
         int index = 0;
         for(int cols = 0; cols < size; cols++) {
             for(int rows= 0; rows < size; rows++) {
-                pixels[index++] = pixelScreen[start + width*(  size-cols)          + rows];
-                pixels[index++] = pixelScreen[start + width*(  size-cols) +   size + rows];
-                pixels[index++] = pixelScreen[start + width*(  size-cols) + 2*size + rows];
-                pixels[index++] = pixelScreen[start + width*(  size-cols) + 3*size + rows];
-                pixels[index++] = pixelScreen[start + width*(  size-cols) + 4*size + rows];
-                pixels[index++] = pixelScreen[start + width*(2*size-cols) + 4*size + rows];
-                pixels[index++] = pixelScreen[start + width*(3*size-cols) + 3*size + rows];
-                pixels[index++] = pixelScreen[start + width*(4*size-cols) + 2*size + rows];
-                pixels[index++] = pixelScreen[start + width*(5*size-cols) + 2*size + rows];
-                pixels[index++] = pixelScreen[start + width*(6*size-cols) + 2*size + rows];
+                pixels[index++] = pixelScreen[start + width*cols + rows];
+                pixels[index++] = pixelScreen[start + width*cols + rows +   size];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 2*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 3*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 4*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 4*size +   width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 3*size + 2*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 2*size + 3*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 2*size + 4*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 2*size + 5*width*size];
             }
         }
         return pixels;
@@ -928,21 +926,21 @@ public class PixelChars {
         int index = 0;
         for(int cols = 0; cols < size; cols++) {
             for(int rows= 0; rows < size; rows++) {
-                pixels[index++] = pixelScreen[start + width*(  size-cols) +   size + rows];
-                pixels[index++] = pixelScreen[start + width*(  size-cols) + 2*size + rows];
-                pixels[index++] = pixelScreen[start + width*(  size-cols) + 3*size + rows];
-                pixels[index++] = pixelScreen[start + width*(2*size-cols)          + rows];
-                pixels[index++] = pixelScreen[start + width*(2*size-cols) + 4*size + rows];
-                pixels[index++] = pixelScreen[start + width*(3*size-cols) +   size + rows];
-                pixels[index++] = pixelScreen[start + width*(3*size-cols) + 2*size + rows];
-                pixels[index++] = pixelScreen[start + width*(3*size-cols) + 3*size + rows];
-                pixels[index++] = pixelScreen[start + width*(4*size-cols)          + rows];
-                pixels[index++] = pixelScreen[start + width*(4*size-cols) + 4*size + rows];
-                pixels[index++] = pixelScreen[start + width*(5*size-cols)          + rows];
-                pixels[index++] = pixelScreen[start + width*(5*size-cols) + 4*size + rows];
-                pixels[index++] = pixelScreen[start + width*(6*size-cols) +   size + rows];
-                pixels[index++] = pixelScreen[start + width*(6*size-cols) + 2*size + rows];
-                pixels[index++] = pixelScreen[start + width*(6*size-cols) + 3*size + rows];
+                pixels[index++] = pixelScreen[start + width*cols + rows +   size];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 2*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 3*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows +            width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 4*size +   width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows +   size + 2*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 2*size + 2*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 3*size + 2*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows +          3*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 4*size + 3*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows +          4*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 4*size + 4*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows +   size + 5*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 2*size + 5*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 3*size + 5*width*size];
             }
         }
         return pixels;
@@ -956,21 +954,56 @@ public class PixelChars {
         int index = 0;
         for(int cols = 0; cols < size; cols++) {
             for(int rows= 0; rows < size; rows++) {
-                pixels[index++] = pixelScreen[start + width*(  size-cols) +   size + rows];
-                pixels[index++] = pixelScreen[start + width*(  size-cols) + 2*size + rows];
-                pixels[index++] = pixelScreen[start + width*(  size-cols) + 3*size + rows];
-                pixels[index++] = pixelScreen[start + width*(2*size-cols)          + rows];
-                pixels[index++] = pixelScreen[start + width*(2*size-cols) + 4*size + rows];
-                pixels[index++] = pixelScreen[start + width*(3*size-cols) +   size + rows];
-                pixels[index++] = pixelScreen[start + width*(3*size-cols) + 2*size + rows];
-                pixels[index++] = pixelScreen[start + width*(3*size-cols) + 3*size + rows];
-                pixels[index++] = pixelScreen[start + width*(3*size-cols) + 4*size + rows];
-                pixels[index++] = pixelScreen[start + width*(4*size-cols) + 4*size + rows];
-                pixels[index++] = pixelScreen[start + width*(5*size-cols)          + rows];
-                pixels[index++] = pixelScreen[start + width*(5*size-cols) + 4*size + rows];
-                pixels[index++] = pixelScreen[start + width*(6*size-cols) +   size + rows];
-                pixels[index++] = pixelScreen[start + width*(6*size-cols) + 2*size + rows];
-                pixels[index++] = pixelScreen[start + width*(6*size-cols) + 3*size + rows];
+                pixels[index++] = pixelScreen[start + width*cols + rows +   size];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 2*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 3*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows +            width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 4*size +   width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows +   size + 2*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 2*size + 2*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 3*size + 2*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 4*size + 2*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 4*size + 3*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows +          4*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 4*size + 4*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows +   size + 5*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 2*size + 5*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 3*size + 5*width*size];
+            }
+        }
+        return pixels;
+    }
+
+    public static Pixel[] PERIOD(PixelEngine pixelEngine, int x, int y, int size) {
+        Pixel[] pixels = new Pixel[4*size*size];
+        Pixel[] pixelScreen = pixelEngine.getPixels();
+        int width = pixelEngine.getWidth();
+        int start = x + y * width;
+        int index = 0;
+        for(int cols = 0; cols < size; cols++) {
+            for(int rows= 0; rows < size; rows++) {
+                pixels[index++] = pixelScreen[start + width*cols + rows +          4*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows +   size + 4*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows +          5*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows +   size + 5*width*size];
+
+            }
+        }
+        return pixels;
+    }
+
+    public static Pixel[] COMMA(PixelEngine pixelEngine, int x, int y, int size) {
+        Pixel[] pixels = new Pixel[3*size*size];
+        Pixel[] pixelScreen = pixelEngine.getPixels();
+        int width = pixelEngine.getWidth();
+        int start = x + y * width;
+        int index = 0;
+        for(int cols = 0; cols < size; cols++) {
+            for(int rows= 0; rows < size; rows++) {
+                pixels[index++] = pixelScreen[start + width*cols + rows +          4*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows +   size + 4*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows +   size + 5*width*size];
+
             }
         }
         return pixels;
