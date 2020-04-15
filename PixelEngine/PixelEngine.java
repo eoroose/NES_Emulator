@@ -66,6 +66,10 @@ public class PixelEngine {
         }
     }
 
+    protected Pixel[] getPixels() {
+        return pixels;
+    }
+
     public Pixel[] getPixels(int xCoor, int yCoor, int width, int height) {
         if(xCoor + width > this.width) width = -xCoor + this.width;
         if(yCoor + height > this.height) height = -yCoor + this.height;
