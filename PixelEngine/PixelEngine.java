@@ -66,7 +66,7 @@ public class PixelEngine {
         }
     }
 
-    protected Pixel[] getPixels() {
+    public Pixel[] getPixels() {
         return pixels;
     }
 

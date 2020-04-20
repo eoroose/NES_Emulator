@@ -1,13 +1,15 @@
 package Example;
 
-import PixelEngine.*;
+import PixelEngine.PixelEngine;
+import PixelString.PixelString;
 
 import java.awt.*;
 
 public class Example {
 
     private final PixelEngine pixelEngine;
-    private Pixel[] pixels1, pixels2, pixels3, pixels4, pixels5;
+    PixelString pixelString1, pixelString2, pixelString3;
+    Color[] colors = new Color[300 * 250];
 
     public Example(PixelEngine pixelEngine) {
         this.pixelEngine = pixelEngine;
@@ -15,37 +17,25 @@ public class Example {
     }
 
     private void init() {
-        pixels1 = PixelChars.ZERO(pixelEngine, 0, 0, 10);
-        pixels2 = PixelChars.PERIOD(pixelEngine, 60, 0, 10);
-        pixels3 = PixelChars.ONE(pixelEngine, 120, 0, 10);
-        pixels4 = PixelChars.TWO(pixelEngine, 180, 0, 10);
-        pixels5 = PixelChars.THREE(pixelEngine, 240, 0, 10);
+        pixelString1 = new PixelString(pixelEngine, 0, 0, 3, "ABCDEFGHIJKLMNOPQRSTUVWXYZ");
+        pixelString1.setPixelColor(Color.RED);
+
+        pixelString2 = new PixelString(pixelEngine, 0, 6*3, 3, "abcdefghijklmnopqrstuvwxyz");
+        pixelString2.setPixelColor(Color.GREEN);
+
+        pixelString3 = new PixelString(pixelEngine, 0, 6*3*2, 5, "012-345,678.9 00  0");
     }
 
     public void tick() {
-        for(Pixel pixel : pixels1) {
-            pixel.setColor(new Color( (float)Math.random(), (float)Math.random(), (float)Math.random()  ));
-        }
-        pixelEngine.setPixels(pixels1);
+        pixelString1.showPixelString();
+        pixelString2.showPixelString();
 
-        for(Pixel pixel : pixels2) {
-            pixel.setColor(new Color( (float)Math.random(), (float)Math.random(), (float)Math.random()  ));
-        }
-        pixelEngine.setPixels(pixels2);
+        pixelString3.setPixelColor(new Color((float)Math.random(), (float)Math.random(), (float)Math.random()));
+        pixelString3.showPixelString();
 
-        for(Pixel pixel : pixels3) {
-            pixel.setColor(new Color( (float)Math.random(), (float)Math.random(), (float)Math.random()  ));
-        }
-        pixelEngine.setPixels(pixels3);
+        for(int x = 0; x < colors.length; x++)
+            colors[x] = new Color((float)Math.random(), (float)Math.random(), (float)Math.random());
 
-        for(Pixel pixel : pixels4) {
-            pixel.setColor(new Color( (float)Math.random(), (float)Math.random(), (float)Math.random()  ));
-        }
-        pixelEngine.setPixels(pixels4);
-
-        for(Pixel pixel : pixels5) {
-            pixel.setColor(new Color( (float)Math.random(), (float)Math.random(), (float)Math.random()  ));
-        }
-        pixelEngine.setPixels(pixels5);
+        pixelEngine.setColors(200, 200, 300, 250, colors);
     }
 }
