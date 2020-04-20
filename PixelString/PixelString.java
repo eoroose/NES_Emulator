@@ -83,16 +83,16 @@ public class PixelString {
         for(int index = 0; index < string.length(); index++) {
             character = string.charAt(index);
 
-            if(character >= 44 && character <= 44 + punctuations.length) {
+            if(character >= 44 && character < 44 + punctuations.length) {
                 Collections.addAll(arrayListPixels, punctuations[character-44].getChar(posX, posY));
             }
-            else if(character >= 48 && character <= 48 + numbers.length) {
+            else if(character >= 48 && character < 48 + numbers.length) {
                 Collections.addAll(arrayListPixels, numbers[character-48].getChar(posX, posY));
             }
-            else if(character >= 65 && character <= 65 + letters.length) {
+            else if(character >= 65 && character < 65 + letters.length) {
                 Collections.addAll(arrayListPixels, letters[character-65].getChar(posX, posY));
             }
-            else if(character >= 97 && character <= 97 + letters.length) {
+            else if(character >= 97 && character < 97 + letters.length) {
                 Collections.addAll(arrayListPixels, letters[character-97].getChar(posX, posY));
             }
             posX += spacingX * size;
