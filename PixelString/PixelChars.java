@@ -1186,17 +1186,18 @@ public class PixelChars {
     }
 
     protected static Pixel[] ASTERISK(PixelEngine pixelEngine, int x, int y, int size) {
-        Pixel[] pixels = new Pixel[4*size*size];
+        Pixel[] pixels = new Pixel[5*size*size];
         Pixel[] pixelScreen = pixelEngine.getPixels();
         int width = pixelEngine.getWidth();
         int start = x + y * width;
         int index = 0;
         for(int cols = 0; cols < size; cols++) {
             for(int rows= 0; rows < size; rows++) {
-                pixels[index++] = pixelScreen[start + width*cols + rows + 2*size +   width*size];
-                pixels[index++] = pixelScreen[start + width*cols + rows +   size + 2*width*size];
-                pixels[index++] = pixelScreen[start + width*cols + rows + 3*size + 2*width*size];
-                pixels[index++] = pixelScreen[start + width*cols + rows + 2*size + 3*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows +   size +   width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 3*size +   width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 2*size + 2*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows +   size + 3*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 3*size + 3*width*size];
             }
         }
         return pixels;
