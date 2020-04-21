@@ -4,6 +4,8 @@ import org.lwjgl.opengl.GL11;
 
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.Iterator;
 
 public class PixelEngine {
@@ -27,10 +29,12 @@ public class PixelEngine {
 
     public void tick() {
         Iterator<Pixel[]> updateIterator = pixelUpdate.iterator();
+        ArrayList<Pixel> pixelArray = new ArrayList<Pixel>();
         while(updateIterator.hasNext()) {
-            setRGBs(updateIterator.next());
+            Collections.addAll(pixelArray, updateIterator.next());
             updateIterator.remove();
         }
+        setRGBs(pixelArray.toArray(new Pixel[pixelArray.size()]));
     }
 
     public void render() {
@@ -52,6 +56,7 @@ public class PixelEngine {
 
     private void setRGBs(Pixel[] pixels) {
         int index, calc;
+        Arrays.fill(RGBs, 0.0f);
         for(Pixel pixel : pixels) {
             index = (pixel.getRealX() + pixel.getRealY() * realWidth) * 3;
             for(int y = 0; y < size; y++) {

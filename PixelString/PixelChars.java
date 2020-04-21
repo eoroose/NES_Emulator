@@ -977,6 +977,250 @@ public class PixelChars {
         return pixels;
     }
 
+    protected static Pixel[] EXCLAMATION(PixelEngine pixelEngine, int x, int y, int size) {
+        Pixel[] pixels = new Pixel[10*size*size];
+        Pixel[] pixelScreen = pixelEngine.getPixels();
+        int width = pixelEngine.getWidth();
+        int start = x + y * width;
+        int index = 0;
+        for(int cols = 0; cols < size; cols++) {
+            for(int rows= 0; rows < size; rows++) {
+                pixels[index++] = pixelScreen[start + width*cols + rows];
+                pixels[index++] = pixelScreen[start + width*cols + rows +   size];
+                pixels[index++] = pixelScreen[start + width*cols + rows +            width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows +   size +   width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows +          2*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows +   size + 2*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows +          3*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows +   size + 3*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows +          5*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows +   size + 5*width*size];
+
+            }
+        }
+        return pixels;
+    }
+
+    protected static Pixel[] QUOTATION(PixelEngine pixelEngine, int x, int y, int size) {
+        Pixel[] pixels = new Pixel[4*size*size];
+        Pixel[] pixelScreen = pixelEngine.getPixels();
+        int width = pixelEngine.getWidth();
+        int start = x + y * width;
+        int index = 0;
+        for(int cols = 0; cols < size; cols++) {
+            for(int rows= 0; rows < size; rows++) {
+                pixels[index++] = pixelScreen[start + width*cols + rows];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 2*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows +            width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 2*size +   width*size];
+
+            }
+        }
+        return pixels;
+    }
+
+    protected static Pixel[] HASHTAG(PixelEngine pixelEngine, int x, int y, int size) {
+        Pixel[] pixels = new Pixel[16*size*size];
+        Pixel[] pixelScreen = pixelEngine.getPixels();
+        int width = pixelEngine.getWidth();
+        int start = x + y * width;
+        int index = 0;
+        for(int cols = 0; cols < size; cols++) {
+            for(int rows= 0; rows < size; rows++) {
+                pixels[index++] = pixelScreen[start + width*cols + rows +   size +   width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 3*size +   width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows +          2*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows +   size + 2*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 2*size + 2*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 3*size + 2*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 4*size + 2*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows +   size + 3*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 3*size + 3*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows +          4*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows +   size + 4*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 2*size + 4*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 3*size + 4*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 4*size + 4*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows +   size + 5*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 3*size + 5*width*size];
+            }
+        }
+        return pixels;
+    }
+
+    protected static Pixel[] DOLLAR(PixelEngine pixelEngine, int x, int y, int size) {
+        Pixel[] pixels = new Pixel[17*size*size];
+        Pixel[] pixelScreen = pixelEngine.getPixels();
+        int width = pixelEngine.getWidth();
+        int start = x + y * width;
+        int index = 0;
+        for(int cols = 0; cols < size; cols++) {
+            for(int rows= 0; rows < size; rows++) {
+                pixels[index++] = pixelScreen[start + width*cols + rows +   size];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 2*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 3*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 4*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows +            width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows +   size + 2*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 2*size + 2*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 3*size + 2*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 4*size + 3*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 4*size + 4*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows +          5*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows +   size + 5*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 2*size + 5*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 3*size + 5*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 2*size +   width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 2*size + 3*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 2*size + 4*width*size];
+            }
+        }
+        return pixels;
+    }
+
+    protected static Pixel[] PERCENT(PixelEngine pixelEngine, int x, int y, int size) {
+        Pixel[] pixels = new Pixel[14*size*size];
+        Pixel[] pixelScreen = pixelEngine.getPixels();
+        int width = pixelEngine.getWidth();
+        int start = x + y * width;
+        int index = 0;
+        for(int cols = 0; cols < size; cols++) {
+            for(int rows= 0; rows < size; rows++) {
+                pixels[index++] = pixelScreen[start + width*cols + rows];
+                pixels[index++] = pixelScreen[start + width*cols + rows +   size];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 4*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 3*size +   width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 4*size +   width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 2*size + 2*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 3*size + 2*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows +   size + 3*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 2*size + 3*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows +          4*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows +   size + 4*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows +          5*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 3*size + 5*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 4*size + 5*width*size];
+            }
+        }
+        return pixels;
+    }
+
+    protected static Pixel[] AMPERSAND(PixelEngine pixelEngine, int x, int y, int size) {
+        Pixel[] pixels = new Pixel[14*size*size];
+        Pixel[] pixelScreen = pixelEngine.getPixels();
+        int width = pixelEngine.getWidth();
+        int start = x + y * width;
+        int index = 0;
+        for(int cols = 0; cols < size; cols++) {
+            for(int rows= 0; rows < size; rows++) {
+                pixels[index++] = pixelScreen[start + width*cols + rows +   size];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 2*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 3*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows +            width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows +   size + 2*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 2*size + 2*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 4*size + 2*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows +          3*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 3*size + 3*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows +          4*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 3*size + 4*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows +   size + 5*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 2*size + 5*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 4*size + 5*width*size];
+            }
+        }
+        return pixels;
+    }
+
+    protected static Pixel[] QUOTE(PixelEngine pixelEngine, int x, int y, int size) {
+        Pixel[] pixels = new Pixel[2*size*size];
+        Pixel[] pixelScreen = pixelEngine.getPixels();
+        int width = pixelEngine.getWidth();
+        int start = x + y * width;
+        int index = 0;
+        for(int cols = 0; cols < size; cols++) {
+            for(int rows= 0; rows < size; rows++) {
+                pixels[index++] = pixelScreen[start + width*cols + rows];
+                pixels[index++] = pixelScreen[start + width*cols + rows +            width*size];
+            }
+        }
+        return pixels;
+    }
+
+    protected static Pixel[] OPEN_PARENTHESIS(PixelEngine pixelEngine, int x, int y, int size) {
+        Pixel[] pixels = new Pixel[6*size*size];
+        Pixel[] pixelScreen = pixelEngine.getPixels();
+        int width = pixelEngine.getWidth();
+        int start = x + y * width;
+        int index = 0;
+        for(int cols = 0; cols < size; cols++) {
+            for(int rows= 0; rows < size; rows++) {
+                pixels[index++] = pixelScreen[start + width*cols + rows +   size];
+                pixels[index++] = pixelScreen[start + width*cols + rows +            width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows +          2*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows +          3*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows +          4*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows +   size + 5*width*size];
+            }
+        }
+        return pixels;
+    }
+
+    protected static Pixel[] CLOSE_PARENTHESIS(PixelEngine pixelEngine, int x, int y, int size) {
+        Pixel[] pixels = new Pixel[6*size*size];
+        Pixel[] pixelScreen = pixelEngine.getPixels();
+        int width = pixelEngine.getWidth();
+        int start = x + y * width;
+        int index = 0;
+        for(int cols = 0; cols < size; cols++) {
+            for(int rows= 0; rows < size; rows++) {
+                pixels[index++] = pixelScreen[start + width*cols + rows + 3*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 4*size +   width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 4*size + 2*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 4*size + 3*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 4*size + 4*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 3*size + 5*width*size];
+            }
+        }
+        return pixels;
+    }
+
+    protected static Pixel[] ASTERISK(PixelEngine pixelEngine, int x, int y, int size) {
+        Pixel[] pixels = new Pixel[4*size*size];
+        Pixel[] pixelScreen = pixelEngine.getPixels();
+        int width = pixelEngine.getWidth();
+        int start = x + y * width;
+        int index = 0;
+        for(int cols = 0; cols < size; cols++) {
+            for(int rows= 0; rows < size; rows++) {
+                pixels[index++] = pixelScreen[start + width*cols + rows + 2*size +   width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows +   size + 2*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 3*size + 2*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 2*size + 3*width*size];
+            }
+        }
+        return pixels;
+    }
+
+    protected static Pixel[] PLUS(PixelEngine pixelEngine, int x, int y, int size) {
+        Pixel[] pixels = new Pixel[5*size*size];
+        Pixel[] pixelScreen = pixelEngine.getPixels();
+        int width = pixelEngine.getWidth();
+        int start = x + y * width;
+        int index = 0;
+        for(int cols = 0; cols < size; cols++) {
+            for(int rows= 0; rows < size; rows++) {
+                pixels[index++] = pixelScreen[start + width*cols + rows + 2*size + 2*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows +   size + 3*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 2*size + 3*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 3*size + 3*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 2*size + 4*width*size];
+            }
+        }
+        return pixels;
+    }
+
+
     protected static Pixel[] COMMA(PixelEngine pixelEngine, int x, int y, int size) {
         Pixel[] pixels = new Pixel[3*size*size];
         Pixel[] pixelScreen = pixelEngine.getPixels();
@@ -1024,6 +1268,241 @@ public class PixelChars {
                 pixels[index++] = pixelScreen[start + width*cols + rows +          5*width*size];
                 pixels[index++] = pixelScreen[start + width*cols + rows +   size + 5*width*size];
 
+            }
+        }
+        return pixels;
+    }
+
+    protected static Pixel[] FORWARD_SLASH(PixelEngine pixelEngine, int x, int y, int size) {
+        Pixel[] pixels = new Pixel[6*size*size];
+        Pixel[] pixelScreen = pixelEngine.getPixels();
+        int width = pixelEngine.getWidth();
+        int start = x + y * width;
+        int index = 0;
+        for(int cols = 0; cols < size; cols++) {
+            for(int rows= 0; rows < size; rows++) {
+                pixels[index++] = pixelScreen[start + width*cols + rows + 3*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 3*size +   width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 2*size + 2*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows +   size + 3*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows +          4*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows +          5*width*size];
+            }
+        }
+        return pixels;
+    }
+
+    protected static Pixel[] COLON(PixelEngine pixelEngine, int x, int y, int size) {
+        Pixel[] pixels = new Pixel[8*size*size];
+        Pixel[] pixelScreen = pixelEngine.getPixels();
+        int width = pixelEngine.getWidth();
+        int start = x + y * width;
+        int index = 0;
+        for(int cols = 0; cols < size; cols++) {
+            for(int rows= 0; rows < size; rows++) {
+                pixels[index++] = pixelScreen[start + width*cols + rows];
+                pixels[index++] = pixelScreen[start + width*cols + rows +   size];
+                pixels[index++] = pixelScreen[start + width*cols + rows +            width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows +   size +   width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows +          4*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows +   size + 4*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows +          5*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows +   size + 5*width*size];
+            }
+        }
+        return pixels;
+    }
+
+    protected static Pixel[] SEMI_COLON(PixelEngine pixelEngine, int x, int y, int size) {
+        Pixel[] pixels = new Pixel[7*size*size];
+        Pixel[] pixelScreen = pixelEngine.getPixels();
+        int width = pixelEngine.getWidth();
+        int start = x + y * width;
+        int index = 0;
+        for(int cols = 0; cols < size; cols++) {
+            for(int rows= 0; rows < size; rows++) {
+                pixels[index++] = pixelScreen[start + width*cols + rows];
+                pixels[index++] = pixelScreen[start + width*cols + rows +   size];
+                pixels[index++] = pixelScreen[start + width*cols + rows +            width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows +   size +   width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows +          4*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows +   size + 4*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows +   size + 5*width*size];
+            }
+        }
+        return pixels;
+    }
+
+    protected static Pixel[] LESS(PixelEngine pixelEngine, int x, int y, int size) {
+        Pixel[] pixels = new Pixel[9*size*size];
+        Pixel[] pixelScreen = pixelEngine.getPixels();
+        int width = pixelEngine.getWidth();
+        int start = x + y * width;
+        int index = 0;
+        for(int cols = 0; cols < size; cols++) {
+            for(int rows= 0; rows < size; rows++) {
+                pixels[index++] = pixelScreen[start + width*cols + rows + 3*size +   width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 4*size +   width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows +   size + 2*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 2*size + 2*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows +          3*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows +   size + 4*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 2*size + 4*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 3*size + 5*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 4*size + 5*width*size];
+            }
+        }
+        return pixels;
+    }
+
+    protected static Pixel[] EQUAL(PixelEngine pixelEngine, int x, int y, int size) {
+        Pixel[] pixels = new Pixel[6*size*size];
+        Pixel[] pixelScreen = pixelEngine.getPixels();
+        int width = pixelEngine.getWidth();
+        int start = x + y * width;
+        int index = 0;
+        for(int cols = 0; cols < size; cols++) {
+            for(int rows= 0; rows < size; rows++) {
+                pixels[index++] = pixelScreen[start + width*cols + rows +   size + 2*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 2*size + 2*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 3*size + 2*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows +   size + 4*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 2*size + 4*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 3*size + 4*width*size];
+            }
+        }
+        return pixels;
+    }
+
+    protected static Pixel[] GREATER(PixelEngine pixelEngine, int x, int y, int size) {
+        Pixel[] pixels = new Pixel[9*size*size];
+        Pixel[] pixelScreen = pixelEngine.getPixels();
+        int width = pixelEngine.getWidth();
+        int start = x + y * width;
+        int index = 0;
+        for(int cols = 0; cols < size; cols++) {
+            for(int rows= 0; rows < size; rows++) {
+                pixels[index++] = pixelScreen[start + width*cols + rows +            width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows +   size +   width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 2*size + 2*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 3*size + 2*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 4*size + 3*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 2*size + 4*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 3*size + 4*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows +          5*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows +   size + 5*width*size];
+            }
+        }
+        return pixels;
+    }
+
+    protected static Pixel[] QUESTION(PixelEngine pixelEngine, int x, int y, int size) {
+        Pixel[] pixels = new Pixel[12*size*size];
+        Pixel[] pixelScreen = pixelEngine.getPixels();
+        int width = pixelEngine.getWidth();
+        int start = x + y * width;
+        int index = 0;
+        for(int cols = 0; cols < size; cols++) {
+            for(int rows= 0; rows < size; rows++) {
+                pixels[index++] = pixelScreen[start + width*cols + rows +   size];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 2*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 3*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows +            width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 3*size +   width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 4*size +   width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 2*size + 2*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 3*size + 2*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows +   size + 3*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 2*size + 3*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows +   size + 5*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 2*size + 5*width*size];
+            }
+        }
+        return pixels;
+    }
+
+    protected static Pixel[] AT(PixelEngine pixelEngine, int x, int y, int size) {
+        Pixel[] pixels = new Pixel[13*size*size];
+        Pixel[] pixelScreen = pixelEngine.getPixels();
+        int width = pixelEngine.getWidth();
+        int start = x + y * width;
+        int index = 0;
+        for(int cols = 0; cols < size; cols++) {
+            for(int rows= 0; rows < size; rows++) {
+                pixels[index++] = pixelScreen[start + width*cols + rows +   size +   width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 2*size +   width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 3*size +   width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows +          2*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 4*size + 2*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows +          3*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 2*size + 3*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows +          4*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows +   size + 4*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 3*size + 4*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows +   size + 5*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 2*size + 5*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 4*size + 5*width*size];
+            }
+        }
+        return pixels;
+    }
+
+    protected static Pixel[] OPEN_BRACKET(PixelEngine pixelEngine, int x, int y, int size) {
+        Pixel[] pixels = new Pixel[8*size*size];
+        Pixel[] pixelScreen = pixelEngine.getPixels();
+        int width = pixelEngine.getWidth();
+        int start = x + y * width;
+        int index = 0;
+        for(int cols = 0; cols < size; cols++) {
+            for(int rows= 0; rows < size; rows++) {
+                pixels[index++] = pixelScreen[start + width*cols + rows];
+                pixels[index++] = pixelScreen[start + width*cols + rows +   size];
+                pixels[index++] = pixelScreen[start + width*cols + rows +            width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows +          2*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows +          3*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows +          4*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows +          5*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows +   size + 5*width*size];
+            }
+        }
+        return pixels;
+    }
+
+    protected static Pixel[] BACK_SLASH(PixelEngine pixelEngine, int x, int y, int size) {
+        Pixel[] pixels = new Pixel[6*size*size];
+        Pixel[] pixelScreen = pixelEngine.getPixels();
+        int width = pixelEngine.getWidth();
+        int start = x + y * width;
+        int index = 0;
+        for(int cols = 0; cols < size; cols++) {
+            for(int rows= 0; rows < size; rows++) {
+                pixels[index++] = pixelScreen[start + width*cols + rows];
+                pixels[index++] = pixelScreen[start + width*cols + rows +            width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows +   size + 2*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 2*size + 3*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 3*size + 4*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 3*size + 5*width*size];
+            }
+        }
+        return pixels;
+    }
+
+    protected static Pixel[] CLOSE_BRACKET(PixelEngine pixelEngine, int x, int y, int size) {
+        Pixel[] pixels = new Pixel[8*size*size];
+        Pixel[] pixelScreen = pixelEngine.getPixels();
+        int width = pixelEngine.getWidth();
+        int start = x + y * width;
+        int index = 0;
+        for(int cols = 0; cols < size; cols++) {
+            for(int rows= 0; rows < size; rows++) {
+                pixels[index++] = pixelScreen[start + width*cols + rows + 3*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 4*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 4*size +   width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 4*size + 2*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 4*size + 3*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 4*size + 4*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 3*size + 5*width*size];
+                pixels[index++] = pixelScreen[start + width*cols + rows + 4*size + 5*width*size];
             }
         }
         return pixels;

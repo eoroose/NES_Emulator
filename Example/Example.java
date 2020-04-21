@@ -8,8 +8,9 @@ import java.awt.*;
 public class Example {
 
     private final PixelEngine pixelEngine;
-    PixelString pixelString1, pixelString2, pixelString3;
+    PixelString pixelString1, pixelString2, pixelString3, pixelString4;
     Color[] colors = new Color[300 * 250];
+    int tick = 0;
 
     public Example(PixelEngine pixelEngine) {
         this.pixelEngine = pixelEngine;
@@ -17,13 +18,15 @@ public class Example {
     }
 
     private void init() {
-        pixelString1 = new PixelString(pixelEngine, 0, 0, 3, "ABCDEFGHIJKLMNOPQRSTUVWXYZ");
+        pixelString1 = new PixelString(pixelEngine, 0, 0, 1, "ABCDEFGHIJKLMNOPQRSTUVWXYZ");
         pixelString1.setPixelColor(Color.RED);
 
-        pixelString2 = new PixelString(pixelEngine, 0, 6*3, 3, "abcdefghijklmnopqrstuvwxyz");
+        pixelString2 = new PixelString(pixelEngine, 0, 6*3, 1, "abcdefghijklmnopqrstuvwxyz 0123456789");
         pixelString2.setPixelColor(Color.GREEN);
 
-        pixelString3 = new PixelString(pixelEngine, 0, 6*3*2, 5, "012-345,678.9 00  0");
+        pixelString3 = new PixelString(pixelEngine, 0, 6*3*2, 4, " ! \" # $ % & ' ( ) * +\n , - . / : ; < = > ? @\n [ \\ ]\n eric.roose15@gmail.com");
+
+        pixelString4 = new PixelString(pixelEngine, 0, 6*3*3*3*3, 5, "tick:" + tick);
     }
 
     public void tick() {
@@ -37,5 +40,9 @@ public class Example {
             colors[x] = new Color((float)Math.random(), (float)Math.random(), (float)Math.random());
 
         pixelEngine.setColors(200, 200, 300, 250, colors);
+
+        pixelString4.setPixelString("tick:" + tick++);
+        pixelString4.setPixelColor(Color.CYAN);
+        pixelString4.showPixelString();
     }
 }
