@@ -1,6 +1,7 @@
 import java.nio.IntBuffer;
 import java.util.Objects;
 
+import Emulator.Emulator;
 import Example.Example;
 import org.lwjgl.opengl.GL;
 import org.lwjgl.opengl.GL11;
@@ -21,7 +22,8 @@ public class Main {
     private long window;
     private final int WIDTH, HEIGHT, SIZE;
     private PixelEngine pixelEngine;
-    private Example example;
+    //private Example example;
+    private Emulator emulator;
 
     public Main(int WIDTH, int HEIGHT, int SIZE) {
         if(WIDTH%SIZE != 0 || HEIGHT%SIZE != 0) System.exit(0);
@@ -111,12 +113,14 @@ public class Main {
 
     private void init() {
         pixelEngine = new PixelEngine(WIDTH, HEIGHT, SIZE);
-        example = new Example(pixelEngine);
+        emulator = new Emulator(pixelEngine);
+        //example = new Example(pixelEngine);
     }
 
     private void tick() {
         pixelEngine.tick();
-        example.tick();
+        emulator.tick();
+        //example.tick();
     }
 
     private void render() {
