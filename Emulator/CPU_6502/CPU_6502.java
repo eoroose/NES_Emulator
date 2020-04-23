@@ -1,7 +1,6 @@
 package Emulator.CPU_6502;
 
 import Emulator.Bus.Bus;
-import Emulator.Unsigned.*;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -13,18 +12,18 @@ public class CPU_6502 {
     private Bus bus = null;
     private final Instruction_6502 instructions;
 
-    public uint8_t a = new uint8_t(0x00);       //accumulator register
-    public uint8_t x = new uint8_t(0x00);       //x register
-    public uint8_t y = new uint8_t(0x00);       //y register
-    public uint8_t stkp = new uint8_t(0x00);    //stack pointer (points to location on bus)
-    public uint8_t status = new uint8_t(0x00);  //status register
-    public uint16_t pc = new uint16_t(0x00);    //program counter
+    public int a = 0x00;       //accumulator register
+    public int x = 0x00;       //x register
+    public int y = 0x00;       //y register
+    public int stkp = 0x00;    //stack pointer (points to location on bus)
+    public int status = 0x00;  //status register
+    public int pc = 0x00;       //program counter
 
-    public uint8_t fetched = new uint8_t(0x00);
-    public uint16_t addr_abs = new uint16_t(0x0000);
-    public uint16_t addr_rel = new uint16_t(0x0000);
-    public uint8_t opcode = new uint8_t(0x00);
-    public uint8_t cycles = new uint8_t(0x00);
+    public int fetched = 0x00;
+    public int addr_abs = 0x0000;
+    public int addr_rel = 0x0000;
+    public int opcode = 0x00;
+    public int cycles = 0x00;
 
     public CPU_6502() {
         instructions = new Instruction_6502(this);
@@ -34,807 +33,796 @@ public class CPU_6502 {
         this.bus = bus;
     }
 
-    private uint8_t read(uint16_t a) {
+    private int read(int a) {
         return bus.read(a, false);
     }
 
-    private void write(uint16_t a, uint8_t d) {
+    private void write(int a, int d) {
         bus.write(a, d);
     }
 
     //convenience functions to access status register
-    private uint8_t getFlag(FLAGS_6502 f) {
-        if((status.get() & f.getOperation().get()) > 0) return new uint8_t(1);
-        return new uint8_t(0);
+    private int getFlag(FLAGS_6502 f) {
+        if((status & f.getOperation()) > 0) return 1;
+        return 0;
     }
 
     private void setFlag(FLAGS_6502 f, boolean v) {
-        if(v) status.set(status.get() | f.getOperation().get());
-        else status.set(status.get() & ~f.getOperation().get());
+        if(v) status |= f.getOperation();
+        else status &= ~f.getOperation();
     }
 
     public void clock() {
-        if(cycles.get() == 0) {
-            opcode.set(read(pc));
-            pc.INCREMENT(1);
+        if(cycles == 0) {
+            opcode = read(pc);
+            pc++;
 
             //get starting number of cycles
-            cycles.set(instructions.lookup[opcode.get()].cycles());
+            cycles = instructions.lookup[opcode].cycles();
 
-            uint16_t additional_cycle1 = new uint16_t(instructions.lookup[opcode.get()].addrMode());
-            uint16_t additional_cycle2 = new uint16_t(instructions.lookup[opcode.get()].operate());
+            int additional_cycle1 = instructions.lookup[opcode].addrMode();
+            int additional_cycle2 = instructions.lookup[opcode].operate();
 
-            cycles.AND_EQUALS(additional_cycle1.get() & additional_cycle2.get());
+            cycles += additional_cycle1 & additional_cycle2;
         }
-        cycles.DECREMENT(1);
+        cycles--;
     }
 
     public void reset() {
-        a.set(0);
-        x.set(0);
-        y.set(0);
-        stkp.set(0xfd);
-        status.set(0x00 | U.getOperation().get());
+        a = 0;
+        x = 0;
+        y = 0;
+        stkp = 0xfd;
+        status = 0x00 | U.getOperation();
 
-        addr_abs.set(0xfffc);
-        uint16_t lo = new uint16_t(read(new uint16_t(addr_abs.get() + 0)));
-        uint16_t hi = new uint16_t(read(new uint16_t(addr_abs.get() + 1)));
+        addr_abs = 0xfffc;
+        int lo = read((addr_abs + 0));
+        int hi = (read((addr_abs + 1)));
 
-        pc.set((hi.get() << 8) | lo.get());
-        addr_rel.set(0x0000);
-        addr_abs.set(0x0000);
-        fetched.set(0x00);
-        cycles.set(8);
+        pc = (hi << 8) | lo;
+        addr_rel = 0x0000;
+        addr_abs = 0x0000;
+        fetched = 0x00;
+        cycles = 8;
     }
 
     public void irq() {
-        if(getFlag(I).get() == 0) {
-            write(new uint16_t(0x0100 + stkp.get()), new uint8_t((pc.get() >> 8) & 0x00ff));
-            stkp.DECREMENT(1);
-            write(new uint16_t(0x0100 + stkp.get()), new uint8_t(pc.get() & 0x00ff));
-            stkp.DECREMENT(1);
+        if(getFlag(I) == 0) {
+            write(0x0100 + stkp, (pc >> 8) & 0x00ff);
+            stkp--;
+            write(0x0100 + stkp, pc & 0x00ff);
+            stkp--;
 
             setFlag(B, false);
             setFlag(U, true);
             setFlag(I, true);
-            write(new uint16_t(0x0100 + stkp.get()), status);
-            stkp.DECREMENT(1);
+            write(0x0100 + stkp, status);
+            stkp--;
 
-            addr_abs.set(0xfffe);
-            uint16_t lo = new uint16_t(read(new uint16_t(addr_abs.get() + 0)));
-            uint16_t hi = new uint16_t(read(new uint16_t(addr_abs.get() + 1)));
-            pc.set((hi.get() << 8) | lo.get());
-            cycles.set(7);
+            addr_abs = 0xfffe;
+            int lo = read(addr_abs + 0);
+            int hi = read(addr_abs + 1);
+            pc = (hi << 8) | lo;
+            cycles = 7;
         }
     }
 
     public void nmi() {
-        write(new uint16_t(0x0100 + stkp.get()), new uint8_t((pc.get() >> 8) & 0x00ff));
-        stkp.DECREMENT(1);
-        write(new uint16_t(0x0100 + stkp.get()), new uint8_t(pc.get() & 0x00ff));
-        stkp.DECREMENT(1);
+        write(0x0100 + stkp, (pc >> 8) & 0x00ff);
+        stkp--;
+        write(0x0100 + stkp, pc & 0x00ff);
+        stkp--;
 
         setFlag(B, false);
         setFlag(U, true);
         setFlag(I, true);
-        write(new uint16_t(0x0100 + stkp.get()), status);
-        stkp.DECREMENT(1);
+        write(0x0100 + stkp, status);
+        stkp--;
 
-        addr_abs.set(0xfffa);
-        uint16_t lo = new uint16_t(read(new uint16_t(addr_abs.get() + 0)));
-        uint16_t hi = new uint16_t(read(new uint16_t(addr_abs.get() + 1)));
-        pc.set((hi.get() << 8) | lo.get());
-        cycles.set(8);
+        addr_abs = 0xfffa;
+        int lo = read(addr_abs + 0);
+        int hi = read(addr_abs + 1);
+        pc = (hi << 8) | lo;
+        cycles = 8;
     }
 
-    public uint8_t fetch() {
-        if(!( instructions.lookup[opcode.get()].addrMode().get() == IMP().get() ))
+    public int fetch() {
+        if(!(instructions.lookup[opcode].addrMode() == IMP()))
             fetched = read(addr_abs);
         return  fetched;
     }
 
     //12 Addressing modes
-    uint8_t IMP() {    // address mode: implied
-        fetched.set(a);
-        return new uint8_t(0);
+    int IMP() {    // address mode: implied
+        fetched = a;
+        return 0;
     }
 
-    uint8_t IMM() {    // address mode: immediate
-        addr_abs.set(pc);
-        pc.INCREMENT(1);
-        return new uint8_t(0);
+    int IMM() {    // address mode: immediate
+        addr_abs = pc;
+        pc++;
+        return 0;
     }
 
-    uint8_t ZP0() {    // address mode: zero page
-        addr_abs.set(read(pc));
-        pc.INCREMENT(1);
-        addr_abs.AND_EQUALS(0x00ff);
-        return new uint8_t(0);
+    int ZP0() {    // address mode: zero page
+        addr_abs = read(pc);
+        pc++;
+        addr_abs &= 0x00ff;
+        return 0;
     }
 
-    uint8_t ZPX() {    // address mode: zero page with x offset
-        addr_abs.set(Unsigned.ADD(read(pc), x));
-        pc.INCREMENT(1);
-        addr_abs.AND_EQUALS(0x00ff);
-        return new uint8_t(0);
+    int ZPX() {    // address mode: zero page with x offset
+        addr_abs = read(pc) + x;
+        pc++;
+        addr_abs &= 0x00ff;
+        return 0;
     }
 
-    uint8_t ZPY() {    // address mode: zero page with y offset
-        addr_abs.set(Unsigned.ADD(read(pc), y));
-        pc.INCREMENT(1);
-        addr_abs.AND_EQUALS(0x00ff);
-        return new uint8_t(0);
+    int ZPY() {    // address mode: zero page with y offset
+        addr_abs = read(pc) + y;
+        pc++;
+        addr_abs &= 0x00ff;
+        return 0;
     }
 
-    uint8_t REL() {    // address mode: relative
-        addr_rel.set(read(pc));
-        pc.INCREMENT(1);
-        if((addr_rel.get() & 0x80) > 0)
-            addr_rel.OR_EQUALS(0xff00);
-        return new uint8_t(0);
+    int REL() {    // address mode: relative
+        addr_rel = read(pc);
+        pc++;
+        if((addr_rel & 0x80) > 0)
+            addr_rel |= 0xff00;
+        return 0;
     }
 
-    uint8_t ABS() {    // address mode: absolute
-        uint16_t lo = new uint16_t(read(pc));
-        pc.INCREMENT(1);
-        uint16_t hi = new uint16_t(read(pc));
-        pc.INCREMENT(1);
-        addr_abs.set((hi.get() << 8) | lo.get());
-        return new uint8_t(0);
+    int ABS() {    // address mode: absolute
+        int lo = read(pc);
+        pc++;
+        int hi = read(pc);
+        pc++;
+        addr_abs = (hi << 8) | lo;
+        return 0;
     }
 
-    uint8_t ABX() {    // address mode: absolute with x offset
-        uint16_t lo = new uint16_t(read(pc));
-        pc.INCREMENT(1);
-        uint16_t hi = new uint16_t(read(pc));
-        pc.INCREMENT(1);
-        addr_abs.set((hi.get() << 8) | lo.get());
-        addr_abs.INCREMENT(x.get());
+    int ABX() {    // address mode: absolute with x offset
+        int lo = read(pc);
+        pc++;
+        int hi = read(pc);
+        pc++;
+        addr_abs = (hi << 8) | lo;
+        addr_abs += x;
 
-        if( (addr_abs.get() & 0xff00) != (hi.get() << 8))
-            return new uint8_t(1);
+        if((addr_abs & 0xff00) != (hi << 8))
+            return 1;
         else
-            return new uint8_t(0);
+            return 0;
     }
 
-    uint8_t ABY() {    // address mode: absolute with y offset
-        uint16_t lo = new uint16_t(read(pc));
-        pc.INCREMENT(1);
-        uint16_t hi = new uint16_t(read(pc));
-        pc.INCREMENT(1);
-        addr_abs.set((hi.get() << 8) | lo.get());
-        addr_abs.INCREMENT(y.get());
+    int ABY() {    // address mode: absolute with y offset
+        int lo = read(pc);
+        pc++;
+        int hi = read(pc);
+        pc++;
+        addr_abs = (hi << 8) | lo;
+        addr_abs += y;
 
-        if( (addr_abs.get() & 0xff00) != (hi.get() << 8))
-            return new uint8_t(1);
+        if((addr_abs & 0xff00) != (hi << 8))
+            return 1;
         else
-            return new uint8_t(0);
+            return 0;
     }
 
-    uint8_t IND() {    // address mode: indirect
-        uint16_t ptr_lo = new uint16_t(read(pc));
-        pc.INCREMENT(1);
-        uint16_t ptr_hi = new uint16_t(read(pc));
-        pc.INCREMENT(1);
-        uint16_t ptr = new uint16_t((ptr_hi.get() << 8) | ptr_lo.get());
-        if(ptr_lo.get() == 0x00ff)
-            addr_abs.set(
-                    (read(new uint16_t(ptr.get() & 0xff00)).get() << 8) |
-                    read(new uint16_t(ptr)).get());
+    int IND() {    // address mode: indirect
+        int ptr_lo = read(pc);
+        pc++;
+        int ptr_hi = read(pc);
+        pc++;
+        int ptr = (ptr_hi << 8) | ptr_lo;
+        if(ptr_lo == 0x00ff)
+            addr_abs = (read(ptr & 0xff00) << 8) | read(ptr);
         else
-            addr_abs.set(
-                    (read(new uint16_t(ptr.get() + 1)).get() << 8) |
-                            read(new uint16_t(ptr)).get());
-        return new uint8_t(0);
+            addr_abs = (read(ptr + 1) << 8) | read(ptr);
+        return 0;
     }
 
-    uint8_t IZX() {    //address mode: indirect x
-        uint16_t t = new uint16_t(read(pc));
-        pc.INCREMENT(1);
-        uint16_t lo = new uint16_t(read(new uint16_t(
-                (t.get() + x.get()) & 0x00ff)));
-        uint16_t hi = new uint16_t(read(new uint16_t(
-                (t.get() + x.get() + 1) & 0x00ff)));
-        addr_abs.set((hi.get() << 8) | lo.get());
-        return new uint8_t(0);
+    int IZX() {    //address mode: indirect x
+        int t = read(pc);
+        pc++;
+        int lo = read(t + x) & 0x00ff;
+        int hi = read(t + x + 1) & 0x00ff;
+        addr_abs = (hi << 8) | lo;
+        return 0;
     }
 
-    uint8_t IZY() {    //address mode: indirect y
-        uint16_t t = new uint16_t(read(pc));
-        pc.INCREMENT(1);
-        uint16_t lo = new uint16_t(read(new uint16_t(
-                t.get() & 0x00ff)));
-        uint16_t hi = new uint16_t(read(new uint16_t(
-                (t.get() + 1) & 0x00ff)));
-        addr_abs.set((hi.get() << 8) | lo.get());
-        addr_abs.INCREMENT(y.get());
+    int IZY() {    //address mode: indirect y
+        int t = read(pc);
+        pc++;
+        int lo = read(t & 0x00ff);
+        int hi = read(t + 1) & 0x00ff;
+        addr_abs = (hi << 8) | lo;
+        addr_abs += y;
 
-        if( (addr_abs.get() & 0xff00) != (hi.get() << 8) )
-            return new uint8_t(1);
+        if((addr_abs & 0xff00) != (hi << 8))
+            return 1;
         else
-            return new uint8_t(0);
+            return 0;
     }
 
     //56 opcodes  + 1 illegal opcode (XXX)
-    uint8_t ADC() {
+    int ADC() {
         fetch();
-        uint16_t temp = new uint16_t(Unsigned.ADD(a, fetched, getFlag(C)));
-        setFlag(C, temp.get() > 255);
-        setFlag(Z, (temp.get() & 0x00ff) == 0);
-        setFlag(V, (~(a.get() ^ fetched.get()) & (a.get() ^ temp.get()) & 0x0080) > 0);
-        setFlag(N, (temp.get() & 0x80) > 0);
-        a.set(temp.get() & 0x00ff);
-        return new uint8_t(1);
+        int temp = a + fetched + getFlag(C);
+        setFlag(C, temp > 255);
+        setFlag(Z, (temp & 0x00ff) == 0);
+        setFlag(V, (~(a ^ fetched) & (a ^ temp) & 0x0080) > 0);
+        setFlag(N, (temp & 0x80) > 0);
+        a = temp & 0x00ff;
+        return 1;
     }
 
-    uint8_t AND() {
+    int AND() {
         fetch();
-        a.AND_EQUALS(fetched.get());
-        setFlag(Z, a.get() == 0x00);
-        setFlag(N, (a.get() & 0x80) > 0);
-        return new uint8_t(1);
+        a &= fetched;
+        setFlag(Z, a == 0x00);
+        setFlag(N, (a & 0x80) > 0);
+        return 1;
     }
 
-    uint8_t ASL() {
+    int ASL() {
         fetch();
-        uint16_t temp = new uint16_t(fetched.get() << 1);
-        setFlag(C, (temp.get() & 0xff00) > 0);
-        setFlag(Z, (temp.get() & 0x00ff) == 0x00);
-        setFlag(N, (temp.get() & 0x80) > 0);
-        if(instructions.lookup[opcode.get()].addrMode().get() == IMP().get())
-            a.set(temp.get() & 0x00ff);
+        int temp = fetched << 1;
+        setFlag(C, (temp & 0xff00) > 0);
+        setFlag(Z, (temp & 0x00ff) == 0x00);
+        setFlag(N, (temp & 0x80) > 0);
+        if(instructions.lookup[opcode].addrMode() == IMP())
+            a = temp & 0x00ff;
         else
-            write(addr_abs, new uint8_t(temp.get() & 0x00ff));
-        return new uint8_t(0);
+            write(addr_abs, temp & 0x00ff);
+        return 0;
     }
 
-    uint8_t BCC() {
-        if(getFlag(C).get() == 0) {
-            cycles.INCREMENT(1);
-            addr_abs.set(Unsigned.ADD(pc, addr_rel));
-            if( (addr_abs.get() & 0xff00) != (pc.get() & 0xff00) )
-                cycles.INCREMENT(1);
-            pc.set(addr_abs);
+    int BCC() {
+        if(getFlag(C) == 0) {
+            cycles++;
+            addr_abs = pc + addr_rel;
+            if((addr_abs & 0xff00) != (pc & 0xff00))
+            cycles++;
+            pc = addr_abs;
         }
-        return new uint8_t(0);
+        return 0;
     }
 
-    uint8_t BCS() {
-        if(getFlag(C).get() == 1) {
-            cycles.INCREMENT(1);
-            addr_abs.set(Unsigned.ADD(pc, addr_rel));
-            if( (addr_abs.get() & 0xff00) != (pc.get() & 0xff00) )
-                cycles.INCREMENT(1);
-            pc.set(addr_abs);
+    int BCS() {
+        if(getFlag(C) == 1) {
+            cycles++;
+            addr_abs = pc + addr_rel;
+            if((addr_abs & 0xff00) != (pc & 0xff00))
+                cycles++;
+            pc = addr_abs;
         }
-        return new uint8_t(0);
+        return 0;
     }
 
-    uint8_t BEQ() {
-        if(getFlag(Z).get() == 1) {
-            cycles.INCREMENT(1);
-            addr_abs.set(Unsigned.ADD(pc, addr_rel));
-            if( (addr_abs.get() & 0xff00) != (pc.get() & 0xff00) )
-                cycles.INCREMENT(1);
-            pc.set(addr_abs);
+    int BEQ() {
+        if(getFlag(Z) == 1) {
+            cycles++;
+            addr_abs = pc + addr_rel;
+            if((addr_abs & 0xff00) != (pc & 0xff00))
+                cycles++;
+            pc = addr_abs;
         }
-        return new uint8_t(0);
+        return 0;
     }
 
-    uint8_t BIT() {
+    int BIT() {
         fetch();
-        uint16_t temp = new uint16_t(a.get() & fetch().get());
-        setFlag(Z, (temp.get() & 0x00ff) == 0x00);
-        setFlag(N, (fetched.get() & (1 << 7)) > 0);
-        setFlag(V, (fetched.get() & (1 << 6)) > 0);
-        return new uint8_t(0);
+        int temp = a & fetch();
+        setFlag(Z, (temp & 0x00ff) == 0x00);
+        setFlag(N, (fetched & (1 << 7)) > 0);
+        setFlag(V, (fetched & (1 << 6)) > 0);
+        return 0;
     }
 
-    uint8_t BMI() {
-        if(getFlag(N).get() == 1) {
-            cycles.INCREMENT(1);
-            addr_abs.set(Unsigned.ADD(pc, addr_rel));
-            if( (addr_abs.get() & 0xff00) != (pc.get() & 0xff00) )
-                cycles.INCREMENT(1);
-            pc.set(addr_abs);
+    int BMI() {
+        if(getFlag(N) == 1) {
+            cycles++;
+            addr_abs = pc + addr_rel;
+            if((addr_abs & 0xff00) != (pc & 0xff00))
+                cycles++;
+            pc = addr_abs;
         }
-        return new uint8_t(0);
+        return 0;
     }
 
-    uint8_t BNE() {
-        if(getFlag(Z).get() == 0) {
-            cycles.INCREMENT(1);
-            addr_abs.set(Unsigned.ADD(pc, addr_rel));
-            if( (addr_abs.get() & 0xff00) != (pc.get() & 0xff00) )
-                cycles.INCREMENT(1);
-            pc.set(addr_abs);
+    int BNE() {
+        if(getFlag(Z) == 0) {
+            cycles++;
+            addr_abs = pc + addr_rel;
+            if((addr_abs & 0xff00) != (pc & 0xff00))
+                cycles++;
+            pc = addr_abs;
         }
-        return new uint8_t(0);
+        return 0;
     }
 
-    uint8_t BPL() {
-        if(getFlag(N).get() == 0) {
-            cycles.INCREMENT(1);
-            addr_abs.set(Unsigned.ADD(pc, addr_rel));
-            if( (addr_abs.get() & 0xff00) != (pc.get() & 0xff00) )
-                cycles.INCREMENT(1);
-            pc.set(addr_abs);
+    int BPL() {
+        if(getFlag(N) == 0) {
+            cycles++;
+            addr_abs = pc + addr_rel;
+            if((addr_abs & 0xff00) != (pc & 0xff00))
+                cycles++;
+            pc = addr_abs;
         }
-        return new uint8_t(0);
+        return 0;
     }
 
-    uint8_t BRK() {
-        pc.INCREMENT(1);
+    int BRK() {
+        pc++;
         setFlag(I, true);
-        write(new uint16_t(0x0100 + stkp.get()), new uint8_t((pc.get() >> 8) & 0x00ff));
-        stkp.DECREMENT(1);
-        write(new uint16_t(0x0100 + stkp.get()), new uint8_t(pc.get() & 0x00ff));
-        stkp.DECREMENT(1);
+        write(0x0100 + stkp, (pc >> 8) & 0x00ff);
+        stkp--;
+        write(0x0100 + stkp, pc & 0x00ff);
+        stkp--;
 
         setFlag(B, true);
-        write(new uint16_t(0x0100 + stkp.get()), status);
-        stkp.DECREMENT(1);
+        write(0x0100 + stkp, status);
+        stkp--;
         setFlag(B, false);
 
-        pc.set( (read(new uint16_t(0xfffe))).get() | read(new uint16_t(0xffff)).get() << 8 );
-        return new uint8_t(0);
+        pc =  read(0xfffe) | read(0xffff) << 8;
+        return 0;
     }
 
-    uint8_t BVC() {
-        if(getFlag(V).get() == 0) {
-            cycles.INCREMENT(1);
-            addr_abs.set(Unsigned.ADD(pc, addr_rel));
-            if( (addr_abs.get() & 0xff00) != (pc.get() & 0xff00) )
-                cycles.INCREMENT(1);
-            pc.set(addr_abs);
+    int BVC() {
+        if(getFlag(V) == 0) {
+            cycles++;
+            addr_abs = pc + addr_rel;
+            if( (addr_abs & 0xff00) != (pc & 0xff00) )
+                cycles++;
+            pc = addr_abs;
         }
-        return new uint8_t(0);
+        return 0;
     }
 
-    uint8_t BVS() {
-        if(getFlag(V).get() == 1) {
-            cycles.INCREMENT(1);
-            addr_abs.set(Unsigned.ADD(pc, addr_rel));
-            if( (addr_abs.get() & 0xff00) != (pc.get() & 0xff00) )
-                cycles.INCREMENT(1);
-            pc.set(addr_abs);
+    int BVS() {
+        if(getFlag(V) == 1) {
+            cycles++;
+            addr_abs = pc + addr_rel;
+            if((addr_abs & 0xff00) != (pc & 0xff00))
+                cycles++;
+            pc = addr_abs;
         }
-        return new uint8_t(0);
+        return 0;
     }
 
-    uint8_t CLC() {
+    int CLC() {
         setFlag(C, false);
-        return new uint8_t(0);
+        return 0;
     }
 
-    uint8_t CLD() {
+    int CLD() {
         setFlag(D, false);
-        return new uint8_t(0);
+        return 0;
     }
 
-    uint8_t CLI() {
+    int CLI() {
         setFlag(I, false);
-        return new uint8_t(0);
+        return 0;
     }
 
-    uint8_t CLV() {
+    int CLV() {
         setFlag(V, false);
-        return new uint8_t(0);
+        return 0;
     }
 
-    uint8_t CMP() {
+    int CMP() {
         fetch();
-        uint16_t temp = new uint16_t(Unsigned.SUBTRACT(a, fetched));
-        setFlag(C, a.get() >= fetched.get());
-        setFlag(Z, (temp.get() & 0x00ff) == 0x0000);
-        setFlag(N, (temp.get() & 0x0080) > 0);
-        return new uint8_t(1);
+        int temp = a - fetched;
+        setFlag(C, a >= fetched);
+        setFlag(Z, (temp & 0x00ff) == 0x0000);
+        setFlag(N, (temp & 0x0080) > 0);
+        return 1;
     }
 
-    uint8_t CPX() {
+    int CPX() {
         fetch();
-        uint16_t temp = new uint16_t(Unsigned.SUBTRACT(x, fetched));
-        setFlag(C, x.get() >= fetched.get());
-        setFlag(Z, (temp.get() & 0x00ff) == 0x0000);
-        setFlag(N, (temp.get() & 0x0080) > 0);
-        return new uint8_t(0);
+        int temp = x - fetched;
+        setFlag(C, x >= fetched);
+        setFlag(Z, (temp & 0x00ff) == 0x0000);
+        setFlag(N, (temp & 0x0080) > 0);
+        return 0;
     }
 
-    uint8_t CPY() {
+    int CPY() {
         fetch();
-        uint16_t temp = new uint16_t(Unsigned.SUBTRACT(y, fetched));
-        setFlag(C, y.get() >= fetched.get());
-        setFlag(Z, (temp.get() & 0x00ff) == 0x0000);
-        setFlag(N, (temp.get() & 0x0080) > 0);
-        return new uint8_t(0);
+        int temp = y - fetched;
+        setFlag(C, y >= fetched);
+        setFlag(Z, (temp & 0x00ff) == 0x0000);
+        setFlag(N, (temp & 0x0080) > 0);
+        return 0;
     }
 
-    uint8_t DEC() {
+    int DEC() {
         fetch();
-        uint16_t temp = new uint16_t(fetched.get() - 1);
-        write(addr_abs, new uint8_t(temp.get() & 0x00ff));
-        setFlag(Z, (temp.get() & 0x00ff) == 0x0000);
-        setFlag(N, (temp.get() & 0x0080) > 0);
-        return new uint8_t(0);
+        int temp = fetched - 1;
+        write(addr_abs, (temp & 0x00ff));
+        setFlag(Z, (temp & 0x00ff) == 0x0000);
+        setFlag(N, (temp & 0x0080) > 0);
+        return 0;
     }
 
-    uint8_t DEX() {
-        x.DECREMENT(1);
-        setFlag(Z, x.get() == 0x00);
-        setFlag(N, (x.get() & 0x80) > 0);
-        return new uint8_t(0);
+    int DEX() {
+        x--;
+        setFlag(Z, x == 0x00);
+        setFlag(N, (x & 0x80) > 0);
+        return 0;
     }
 
-    uint8_t DEY() {
-        y.DECREMENT(1);
-        setFlag(Z, y.get() == 0x00);
-        setFlag(N, (y.get() & 0x80) > 0);
-        return new uint8_t(0);
+    int DEY() {
+        y--;
+        setFlag(Z, y == 0x00);
+        setFlag(N, (y & 0x80) > 0);
+        return 0;
     }
 
-    uint8_t EOR() {
+    int EOR() {
         fetch();
-        a.XOR_EQUALS(fetched.get());
-        setFlag(Z, a.get() == 0x00);
-        setFlag(N, (a.get() & 0x80) > 0);
-        return new uint8_t(0);
+        a ^= fetched;
+        setFlag(Z, a == 0x00);
+        setFlag(N, (a & 0x80) > 0);
+        return 0;
     }
 
-    uint8_t INC() {
+    int INC() {
         fetch();
-        uint16_t temp = new uint16_t(fetched.get() + 1);
-        write(addr_abs, new uint8_t(temp.get() & 0x00ff));
-        setFlag(Z, (temp.get() & 0x00ff) == 0x0000);
-        setFlag(N, (temp.get() & 0x0080) > 0);
-        return new uint8_t(0);
+        int temp = fetched + 1;
+        write(addr_abs, (temp & 0x00ff));
+        setFlag(Z, (temp & 0x00ff) == 0x0000);
+        setFlag(N, (temp & 0x0080) > 0);
+        return 0;
     }
 
-    uint8_t INX() {
-        x.INCREMENT(1);
-        setFlag(Z, x.get() == 0x00);
-        setFlag(N, (x.get() & 0x80) > 0);
-        return new uint8_t(0);
+    int INX() {
+        x++;
+        setFlag(Z, x == 0x00);
+        setFlag(N, (x & 0x80) > 0);
+        return 0;
     }
 
-    uint8_t INY() {
-        y.INCREMENT(1);
-        setFlag(Z, y.get() == 0x00);
-        setFlag(N, (y.get() & 0x80) > 0);
-        return new uint8_t(0);
+    int INY() {
+        y++;
+        setFlag(Z, y == 0x00);
+        setFlag(N, (y & 0x80) > 0);
+        return 0;
     }
 
-    uint8_t JMP() {
-        pc.set(addr_abs);
-        return new uint8_t(0);
+    int JMP() {
+        pc = addr_abs;
+        return 0;
     }
 
-    uint8_t JSR() {
-        pc.DECREMENT(1);
-        write(new uint16_t(0x0100 + stkp.get()), new uint8_t((pc.get() >> 8) & 0x00ff));
-        stkp.DECREMENT(1);
-        write(new uint16_t(0x0100 + stkp.get()), new uint8_t(pc.get() & 0x00ff));
-        stkp.DECREMENT(1);
-        pc.set(addr_abs);
-        return new uint8_t(0);
+    int JSR() {
+        pc--;
+        write(0x0100 + stkp, (pc >> 8) & 0x00ff);
+        stkp--;
+        write(0x0100 + stkp, pc & 0x00ff);
+        stkp--;
+        pc = addr_abs;
+        return 0;
     }
 
-    uint8_t LDA() {
+    int LDA() {
         fetch();
-        a.set(fetched);
-        setFlag(Z, a.get() == 0x00);
-        setFlag(N, (a.get() & 0x80) > 0);
-        return new uint8_t(1);
+        a = fetched;
+        setFlag(Z, a == 0x00);
+        setFlag(N, (a & 0x80) > 0);
+        return 1;
     }
 
-    uint8_t LDX() {
+    int LDX() {
         fetch();
-        x.set(fetched);
-        setFlag(Z, x.get() == 0x00);
-        setFlag(N, (x.get() & 0x80) > 0);
-        return new uint8_t(1);
+        x = fetched;
+        setFlag(Z, x == 0x00);
+        setFlag(N, (x & 0x80) > 0);
+        return 1;
     }
 
-    uint8_t LDY() {
+    int LDY() {
         fetch();
-        y.set(fetched);
-        setFlag(Z, y.get() == 0x00);
-        setFlag(N, (y.get() & 0x80) > 0);
-        return new uint8_t(1);
+        y = fetched;
+        setFlag(Z, y == 0x00);
+        setFlag(N, (y & 0x80) > 0);
+        return 1;
     }
 
-    uint8_t LSR() {
+    int LSR() {
         fetch();
-        setFlag(C, (fetched.get() & 0x0001) > 0);
-        uint16_t temp = new uint16_t(fetched.get() >> 1);
-        setFlag(Z, (temp.get() & 0x00ff) == 0x0000);
-        setFlag(N, (temp.get() & 0x0080) > 0);
-        if(instructions.lookup[opcode.get()].addrMode().get() == IMP().get())
-            a.set(temp.get() & 0x00ff);
+        setFlag(C, (fetched & 0x0001) > 0);
+        int temp = fetched >> 1;
+        setFlag(Z, (temp & 0x00ff) == 0x0000);
+        setFlag(N, (temp & 0x0080) > 0);
+        if(instructions.lookup[opcode].addrMode() == IMP())
+            a = temp & 0x00ff;
         else
-            write(addr_abs, new uint8_t(temp.get() & 0x00ff));
-        return new uint8_t(0);
+            write(addr_abs, temp & 0x00ff);
+        return 0;
     }
 
-    uint8_t NOP() {
-        switch (opcode.get()) {
+    int NOP() {
+        switch (opcode) {
             case 0x1c:
             case 0x3c:
             case 0x5c:
             case 0x7c:
             case 0xdc:
             case 0xfc:
-                return new uint8_t(1);
+                return 1;
         }
-        return new uint8_t(0);
+        return 0;
     }
 
-    uint8_t ORA() {
+    int ORA() {
         fetch();
-        a.OR_EQUALS(fetched.get());
-        setFlag(Z, a.get() == 0x00);
-        setFlag(N, (a.get() & 0x80) > 0);
-        return new uint8_t(1);
+        a |= fetched;
+        setFlag(Z, a == 0x00);
+        setFlag(N, (a & 0x80) > 0);
+        return 1;
     }
 
-    uint8_t PHA() {
-        write(new uint16_t(0x0100 + stkp.get()), a);
-        stkp.DECREMENT(1);
-        return new uint8_t(0);
+    int PHA() {
+        write(0x0100 + stkp, a);
+        stkp--;
+        return 0;
     }
 
-    uint8_t PHP() {
-        write(new uint16_t(0x0100 + stkp.get()),
-              new uint8_t(status.get() | B.getOperation().get() | U.getOperation().get()));
+    int PHP() {
+        write(0x0100 + stkp, status | B.getOperation() | U.getOperation());
         setFlag(B, false);
         setFlag(U, false);
-        stkp.DECREMENT(1);
-        return new uint8_t(0);
+        stkp--;
+        return 0;
     }
 
-    uint8_t PLA() {
-        stkp.INCREMENT(1);
-        a.set(read(new uint16_t(0x0100 + stkp.get())));
-        setFlag(Z, a.get() == 0x00);
-        setFlag(N, (a.get() & 0x80) > 0);
-        return new uint8_t(0);
+    int PLA() {
+        stkp++;
+        a = read(0x0100 + stkp);
+        setFlag(Z, a == 0x00);
+        setFlag(N, (a & 0x80) > 0);
+        return 0;
     }
 
-    uint8_t PLP() {
-        stkp.INCREMENT(1);
-        status.set(read(new uint16_t(0x0100 + stkp.get())));
+    int PLP() {
+        stkp++;
+        status = read(0x0100 + stkp);
         setFlag(U, true);
-        return new uint8_t(0);
+        return 0;
     }
 
-    uint8_t ROL() {
+    int ROL() {
         fetch();
-        uint16_t temp = new uint16_t((fetched.get() << 1) | getFlag(C).get());
-        setFlag(C, (temp.get() & 0xff00) > 0);
-        setFlag(Z, (temp.get() & 0x00ff) == 0x0000);
-        setFlag(N, (temp.get() & 0x0080) > 0);
-        if(instructions.lookup[opcode.get()].addrMode().get() == IMP().get())
-            a.set(temp.get() & 0x00ff);
+        int temp = (fetched << 1) | getFlag(C);
+        setFlag(C, (temp & 0xff00) > 0);
+        setFlag(Z, (temp & 0x00ff) == 0x0000);
+        setFlag(N, (temp & 0x0080) > 0);
+        if(instructions.lookup[opcode].addrMode() == IMP())
+            a = temp & 0x00ff;
         else
-            write(addr_abs, new uint8_t(temp.get() & 0x00ff));
-        return new uint8_t(0);
+            write(addr_abs, temp & 0x00ff);
+        return 0;
     }
 
-    uint8_t ROR() {
+    int ROR() {
         fetch();
-        uint16_t temp = new uint16_t((getFlag(C).get() << 1) | (fetched.get() >> 1));
-        setFlag(C, (fetched.get() & 0x01) > 0);
-        setFlag(Z, (temp.get() & 0x00ff) == 0x00);
-        setFlag(N, (temp.get() & 0x0080) > 0);
-        if(instructions.lookup[opcode.get()].addrMode().get() == IMP().get())
-            a.set(temp.get() & 0x00ff);
+        int temp = (getFlag(C) << 1) | (fetched >> 1);
+        setFlag(C, (fetched & 0x01) > 0);
+        setFlag(Z, (temp & 0x00ff) == 0x00);
+        setFlag(N, (temp & 0x0080) > 0);
+        if(instructions.lookup[opcode].addrMode() == IMP())
+            a = temp & 0x00ff;
         else
-            write(addr_abs, new uint8_t(temp.get() & 0x00ff));
-        return new uint8_t(0);
+            write(addr_abs, temp & 0x00ff);
+        return 0;
     }
 
-    uint8_t RTI() {
-        stkp.INCREMENT(1);
-        status.set(read(new uint16_t(0x0100 + stkp.get())));
-        status.AND_EQUALS(~B.getOperation().get());
-        status.AND_EQUALS(~U.getOperation().get());
+    int RTI() {
+        stkp++;
+        status = read(0x0100 + stkp);
+        status &= ~B.getOperation();
+        status &= ~U.getOperation();
 
-        stkp.INCREMENT(1);
-        pc.set(read(new uint16_t(0x0100 + stkp.get())));
-        stkp.INCREMENT(1);
-        pc.OR_EQUALS(read(new uint16_t(0x0100 + stkp.get())).get() << 8);
-        return new uint8_t(0);
+        stkp++;
+        pc = read(0x0100 + stkp);
+        stkp++;
+        pc |= read(0x0100 + stkp) << 8;
+        return 0;
     }
 
-    uint8_t RTS() {
-        stkp.INCREMENT(1);
-        pc.set(read(new uint16_t(0x0100 + stkp.get())));
-        stkp.INCREMENT(1);
-        pc.OR_EQUALS(read(new uint16_t(0x0100 + stkp.get())).get() << 8);
-        return new uint8_t(0);
+    int RTS() {
+        stkp++;
+        pc = read(0x0100 + stkp);
+        stkp++;
+        pc |= read(0x0100 + stkp) << 8;
+        return 0;
     }
 
-    uint8_t SBC() {
+    int SBC() {
         fetch();
-        uint16_t value = new uint16_t(fetched.get() ^ 0x00ff);
-        uint16_t temp = new uint16_t(Unsigned.ADD(a, value, getFlag(C)));
-        setFlag(C, (temp.get() & 0xff00) > 0);
-        setFlag(Z, (temp.get() & 0x00ff) == 0);
-        setFlag(V, ((temp.get() ^ a.get()) & (temp.get() ^ value.get()) & 0x0080) > 0);
-        setFlag(N, (temp.get() & 0x0080) > 0);
-        a.set(temp.get() & 0x00ff);
-        return new uint8_t(1);
+        int value = fetched ^ 0x00ff;
+        int temp = a + value + getFlag(C);
+        setFlag(C, (temp & 0xff00) > 0);
+        setFlag(Z, (temp & 0x00ff) == 0);
+        setFlag(V, ((temp ^ a) & (temp ^ value) & 0x0080) > 0);
+        setFlag(N, (temp & 0x0080) > 0);
+        a = temp & 0x00ff;
+        return 1;
     }
 
-    uint8_t SEC() {
+    int SEC() {
         setFlag(C, true);
-        return new uint8_t(0);
+        return 0;
     }
-    uint8_t SED() {
+    int SED() {
         setFlag(D, true);
-        return new uint8_t(0);
+        return 0;
     }
 
-    uint8_t SEI() {
+    int SEI() {
         setFlag(I, true);
-        return new uint8_t(0);
+        return 0;
     }
 
-    uint8_t STA() {
+    int STA() {
         write(addr_abs, a);
-        return new uint8_t(0);
+        return 0;
     }
 
-    uint8_t STX() {
+    int STX() {
         write(addr_abs, x);
-        return new uint8_t(0);
+        return 0;
     }
 
-    uint8_t STY() {
+    int STY() {
         write(addr_abs, y);
-        return new uint8_t(0);
+        return 0;
     }
 
-    uint8_t TAX() {
-        x.set(a);
-        setFlag(Z, x.get() == 0x00);
-        setFlag(N, (x.get() & 0x80) > 0);
-        return new uint8_t(0);
+    int TAX() {
+        x = a;
+        setFlag(Z, x == 0x00);
+        setFlag(N, (x & 0x80) > 0);
+        return 0;
     }
 
-    uint8_t TAY() {
-        y.set(a);
-        setFlag(Z, y.get() == 0x00);
-        setFlag(N, (y.get() & 0x80) > 0);
-        return new uint8_t(0);
+    int TAY() {
+        y = a;
+        setFlag(Z, y == 0x00);
+        setFlag(N, (y & 0x80) > 0);
+        return 0;
     }
 
-    uint8_t TSX() {
-        x.set(stkp);
-        setFlag(Z, x.get() == 0x00);
-        setFlag(N, (x.get() & 0x80) > 0);
-        return new uint8_t(0);
+    int TSX() {
+        x = stkp;
+        setFlag(Z, x == 0x00);
+        setFlag(N, (x & 0x80) > 0);
+        return 0;
     }
 
-    uint8_t TXA() {
-        a.set(x);
-        setFlag(Z, a.get() == 0x00);
-        setFlag(N, (a.get() & 0x80) > 0);
-        return new uint8_t(0);
+    int TXA() {
+        a = x;
+        setFlag(Z, a == 0x00);
+        setFlag(N, (a & 0x80) > 0);
+        return 0;
     }
 
-    uint8_t TXS() {
-        stkp.set(x);
-        return new uint8_t(0);
+    int TXS() {
+        stkp = x;
+        return 0;
     }
 
-    uint8_t TYA() {
-        a.set(y);
-        setFlag(Z, a.get() == 0x00);
-        setFlag(N, (a.get() & 0x80) > 0);
-        return new uint8_t(0);
+    int TYA() {
+        a = y;
+        setFlag(Z, a == 0x00);
+        setFlag(N, (a & 0x80) > 0);
+        return 0;
     }
 
-    uint8_t XXX() {
-        return new uint8_t(0);
+    int XXX() {
+        return 0;
     }
 
     //helper functions
     public boolean complete() {
-        return cycles.get() == 0;
+        return cycles == 0;
     }
 
-    public String hex(Unsigned n, int d) {
-        String s = String.valueOf(d);
-        for(int i = d - 1; i >= 0; i--, n.set(n.get() >> 4))
-            s.toCharArray()[i] = "0123456789ABCDEF".toCharArray()[n.get() & 0xf];
-        return s;
+
+    public String hex(int n) {
+        return Integer.toHexString(n);
     }
 
-    public Map<uint16_t, String> disassemble(uint16_t nStart, uint16_t nStop) {
-        uint32_t addr = new uint32_t(nStart);
-        uint8_t value = new uint8_t(0x00);
-        uint8_t lo = new uint8_t(0x00);
-        uint8_t hi = new uint8_t(0x00);
-        Map<uint16_t, String> mapLines = new HashMap<uint16_t, String>();
-        uint16_t line_addr = new uint16_t(0);
+    public Map<Integer, String> disassemble(int nStart, int nStop) {
+        int addr = nStart;
+        int value = 0x00;
+        int lo = 0x00;
+        int hi = 0x00;
+        Map<Integer, String> mapLines = new HashMap<Integer, String>();
+        int line_addr = 0;
 
-        while(addr.get() <= nStop.get()) {
-            line_addr.set(addr);
-            String sInst = "$" + hex(addr, 4) + ": ";
-            uint8_t opcode = new uint8_t(bus.read(new uint16_t(addr), true));
-            addr.INCREMENT(1);
-            sInst += instructions.lookup[opcode.get()].name() + " ";
+        while(addr <= nStop) {
+            line_addr = addr;
+            String sInst = "$" + hex(addr) + ": ";
+            int opcode = bus.read(addr, true);
+            addr++;
+            sInst += instructions.lookup[opcode].name() + " ";
 
-            if(instructions.lookup[opcode.get()].addrMode().get() == IMP().get()) {
+            if(instructions.lookup[opcode].addrMode() == IMP()) {
                 sInst += " {IMP}";
             }
-            else if(instructions.lookup[opcode.get()].addrMode().get() == IMM().get()) {
-                value.set(bus.read(new uint16_t(addr), true));
-                addr.INCREMENT(1);
-                sInst += "$" + hex(value, 2) + " {IMM}";
+            else if(instructions.lookup[opcode].addrMode() == IMM()) {
+                value = bus.read(addr, true);
+                addr++;
+                sInst += "$" + hex(value) + " {IMM}";
             }
-            else if(instructions.lookup[opcode.get()].addrMode().get() == ZP0().get()) {
-                lo.set(bus.read(new uint16_t(addr), true));
-                addr.INCREMENT(1);
-                hi.set(0x00);
-                sInst += "$" + hex(lo, 2) + " {ZP0}";
+            else if(instructions.lookup[opcode].addrMode() == ZP0()) {
+                lo = bus.read(addr, true);
+                addr++;
+                hi = 0x00;
+                sInst += "$" + hex(lo) + " {ZP0}";
             }
-            else if(instructions.lookup[opcode.get()].addrMode().get() == ZPX().get()) {
-                lo.set(bus.read(new uint16_t(addr), true));
-                addr.INCREMENT(1);
-                hi.set(0x00);
-                sInst += "$" + hex(lo, 2) + ", X {ZPX}";
+            else if(instructions.lookup[opcode].addrMode() == ZPX()) {
+                lo = bus.read(addr, true);
+                addr++;
+                hi = 0x00;
+                sInst += "$" + hex(lo) + ", X {ZPX}";
             }
-            else if(instructions.lookup[opcode.get()].addrMode().get() == ZPY().get()) {
-                lo.set(bus.read(new uint16_t(addr), true));
-                addr.INCREMENT(1);
-                hi.set(0x00);
-                sInst += "$" + hex(lo, 2) + ", Y {ZPY}";
+            else if(instructions.lookup[opcode].addrMode() == ZPY()) {
+                lo = bus.read(addr, true);
+                addr++;
+                hi = 0x00;
+                sInst += "$" + hex(lo) + ", Y {ZPY}";
             }
-            else if(instructions.lookup[opcode.get()].addrMode().get() == IZX().get()) {
-                lo.set(bus.read(new uint16_t(addr), true));
-                addr.INCREMENT(1);
-                hi.set(0x00);
-                sInst += "($" + hex(lo, 2) + ",X) {IZX}";
+            else if(instructions.lookup[opcode].addrMode() == IZX()) {
+                lo = bus.read(addr, true);
+                addr++;
+                hi = 0x00;
+                sInst += "($" + hex(lo) + ",X) {IZX}";
             }
-            else if(instructions.lookup[opcode.get()].addrMode().get() == IZY().get()) {
-                lo.set(bus.read(new uint16_t(addr), true));
-                addr.INCREMENT(1);
-                hi.set(0x00);
-                sInst += "($" + hex(lo, 2) + ",Y) {IZY}";
+            else if(instructions.lookup[opcode].addrMode() == IZY()) {
+                lo = bus.read(addr, true);
+                addr++;
+                hi = 0x00;
+                sInst += "($" + hex(lo) + ",Y) {IZY}";
             }
-            else if(instructions.lookup[opcode.get()].addrMode().get() == ABS().get()) {
-                lo.set(bus.read(new uint16_t(addr), true));
-                addr.INCREMENT(1);
-                hi.set(bus.read(new uint16_t(addr), true));
-                addr.INCREMENT(1);
-                sInst += "$" + hex(new uint16_t( (hi.get() << 8) | lo.get()), 4) + " {ABS}";
+            else if(instructions.lookup[opcode].addrMode() == ABS()) {
+                lo = bus.read(addr, true);
+                addr++;
+                hi = bus.read(addr, true);
+                addr++;
+                sInst += "$" + hex((hi << 8) | lo) + " {ABS}";
             }
-            else if(instructions.lookup[opcode.get()].addrMode().get() == ABX().get()) {
-                lo.set(bus.read(new uint16_t(addr), true));
-                addr.INCREMENT(1);
-                hi.set(bus.read(new uint16_t(addr), true));
-                addr.INCREMENT(1);
-                sInst += "$" + hex(new uint16_t( (hi.get() << 8) | lo.get()), 4) + ", X {ABX}";
+            else if(instructions.lookup[opcode].addrMode() == ABX()) {
+                lo = bus.read(addr, true);
+                addr++;
+                hi = bus.read(addr, true);
+                addr++;
+                sInst += "$" + hex((hi << 8) | lo) + ", X {ABX}";
             }
-            else if(instructions.lookup[opcode.get()].addrMode().get() == ABY().get()) {
-                lo.set(bus.read(new uint16_t(addr), true));
-                addr.INCREMENT(1);
-                hi.set(bus.read(new uint16_t(addr), true));
-                addr.INCREMENT(1);
-                sInst += "$" + hex(new uint16_t( (hi.get() << 8) | lo.get()), 4) + ", Y {ABY}";
+            else if(instructions.lookup[opcode].addrMode() == ABY()) {
+                lo = bus.read(addr, true);
+                addr++;
+                hi = bus.read(addr, true);
+                addr++;
+                sInst += "$" + hex((hi << 8) | lo) + ", Y {ABY}";
             }
-            else if(instructions.lookup[opcode.get()].addrMode().get() == IND().get()) {
-                lo.set(bus.read(new uint16_t(addr), true));
-                addr.INCREMENT(1);
-                hi.set(bus.read(new uint16_t(addr), true));
-                addr.INCREMENT(1);
-                sInst += "($" + hex(new uint16_t( (hi.get() << 8) | lo.get()), 4) + ") {IND}";
+            else if(instructions.lookup[opcode].addrMode() == IND()) {
+                lo = bus.read(addr, true);
+                addr++;
+                hi = bus.read(addr, true);
+                addr++;
+                sInst += "($" + hex((hi << 8) | lo) + ") {IND}";
             }
-            else if(instructions.lookup[opcode.get()].addrMode().get() == REL().get()) {
-                value.set(bus.read(new uint16_t(addr), true));
-                addr.INCREMENT(1);
-                sInst += "$" + hex(value, 2) + " [$" + hex(new uint32_t(addr.get() + value.get()), 4) + "] {REL}";
+            else if(instructions.lookup[opcode].addrMode() == REL()) {
+                value = bus.read(addr, true);
+                addr++;
+                sInst += "$" + hex(value) + " [$" + hex(addr + value) + "] {REL}";
             }
             mapLines.put(line_addr, sInst);
         }

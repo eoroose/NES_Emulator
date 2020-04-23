@@ -1,6 +1,7 @@
 import java.nio.IntBuffer;
 import java.util.Objects;
 
+import Emulator.Emulator;
 import Example.Example;
 import InputHandler.Keyboard;
 import org.lwjgl.glfw.*;
@@ -20,8 +21,8 @@ public class Main {
     private GLFWKeyCallback keyCallback;
     private final int WIDTH, HEIGHT, SIZE;
     private PixelEngine pixelEngine;
-    private Example example;
-    //private Emulator emulator;
+    //private Example example;
+    private Emulator emulator;
 
     public Main(int WIDTH, int HEIGHT, int SIZE) {
         if(WIDTH%SIZE != 0 || HEIGHT%SIZE != 0) System.exit(0);
@@ -111,14 +112,14 @@ public class Main {
 
     private void init() {
         pixelEngine = new PixelEngine(WIDTH, HEIGHT, SIZE);
-        //emulator = new Emulator(pixelEngine);
-        example = new Example(pixelEngine);
+        emulator = new Emulator(pixelEngine);
+        //example = new Example(pixelEngine);
     }
 
     private void tick() {
         pixelEngine.tick();
-        //emulator.tick();
-        example.tick();
+        emulator.tick();
+        //example.tick();
     }
 
     private void render() {
@@ -129,6 +130,6 @@ public class Main {
     }
 
     public static void main(String[] args) {
-        new Main(600, 600, 1).run();
+        new Main(680, 680, 1).run();
     }
 }
