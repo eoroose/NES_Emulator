@@ -1,9 +1,12 @@
 package Example;
 
+import InputHandler.Keyboard;
 import PixelEngine.PixelEngine;
 import PixelString.PixelString;
 
 import java.awt.*;
+
+import static org.lwjgl.glfw.GLFW.*;
 
 public class Example {
 
@@ -44,5 +47,8 @@ public class Example {
         pixelString4.setPixelString("tick:" + tick++);
         pixelString4.setPixelColor(Color.CYAN);
         pixelString4.showPixelString();
+
+        if(Keyboard.keys[GLFW_KEY_W])
+            System.out.println("w is pressed");
     }
 }

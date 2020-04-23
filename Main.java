@@ -1,15 +1,12 @@
 import java.nio.IntBuffer;
 import java.util.Objects;
 
-import Emulator.Emulator;
 import Example.Example;
+import InputHandler.Keyboard;
+import org.lwjgl.glfw.*;
 import org.lwjgl.opengl.GL;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.system.MemoryStack;
-import org.lwjgl.glfw.Callbacks;
-import org.lwjgl.glfw.GLFW;
-import org.lwjgl.glfw.GLFWErrorCallback;
-import org.lwjgl.glfw.GLFWVidMode;
 import PixelEngine.PixelEngine;
 
 import static org.lwjgl.opengles.GLES20.GL_COLOR_BUFFER_BIT;
@@ -20,10 +17,11 @@ import static org.lwjgl.system.MemoryUtil.*;
 public class Main {
 
     private long window;
+    private GLFWKeyCallback keyCallback;
     private final int WIDTH, HEIGHT, SIZE;
     private PixelEngine pixelEngine;
-    //private Example example;
-    private Emulator emulator;
+    private Example example;
+    //private Emulator emulator;
 
     public Main(int WIDTH, int HEIGHT, int SIZE) {
         if(WIDTH%SIZE != 0 || HEIGHT%SIZE != 0) System.exit(0);
@@ -35,7 +33,6 @@ public class Main {
     public void run() {
         setup();
         loop();
-
         Callbacks.glfwFreeCallbacks(window);
         GLFW.glfwDestroyWindow(window);
 
@@ -59,7 +56,8 @@ public class Main {
             throw new IllegalStateException("Unable to create GLFW Window");
         }
 
-        GLFW.glfwSetKeyCallback(window, (window, key, scancode, action, mods) -> {});
+        GLFW.glfwSetKeyCallback(window, keyCallback = new Keyboard());
+        //GLFW.glfwSetKeyCallback(window, (window, key, scancode, action, mods) -> {});
 
         try(MemoryStack stack = stackPush()){
             IntBuffer pWidth = stack.mallocInt(1);
@@ -113,14 +111,14 @@ public class Main {
 
     private void init() {
         pixelEngine = new PixelEngine(WIDTH, HEIGHT, SIZE);
-        emulator = new Emulator(pixelEngine);
-        //example = new Example(pixelEngine);
+        //emulator = new Emulator(pixelEngine);
+        example = new Example(pixelEngine);
     }
 
     private void tick() {
         pixelEngine.tick();
-        emulator.tick();
-        //example.tick();
+        //emulator.tick();
+        example.tick();
     }
 
     private void render() {

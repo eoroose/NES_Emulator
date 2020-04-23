@@ -2,6 +2,10 @@ package Emulator.CPU_6502;
 
 import Emulator.Bus.Bus;
 import Emulator.Unsigned.*;
+
+import java.util.HashMap;
+import java.util.Map;
+
 import static Emulator.CPU_6502.FLAGS_6502.*;
 
 public class CPU_6502 {
@@ -49,13 +53,79 @@ public class CPU_6502 {
         else status.set(status.get() & ~f.getOperation().get());
     }
 
-    public void clock() {}
+    public void clock() {
+        if(cycles.get() == 0) {
+            opcode.set(read(pc));
+            pc.INCREMENT(1);
 
-    public void reset() {}
+            //get starting number of cycles
+            cycles.set(instructions.lookup[opcode.get()].cycles());
 
-    public void irq() {}
+            uint16_t additional_cycle1 = new uint16_t(instructions.lookup[opcode.get()].addrMode());
+            uint16_t additional_cycle2 = new uint16_t(instructions.lookup[opcode.get()].operate());
 
-    public void nmi() {}
+            cycles.AND_EQUALS(additional_cycle1.get() & additional_cycle2.get());
+        }
+        cycles.DECREMENT(1);
+    }
+
+    public void reset() {
+        a.set(0);
+        x.set(0);
+        y.set(0);
+        stkp.set(0xfd);
+        status.set(0x00 | U.getOperation().get());
+
+        addr_abs.set(0xfffc);
+        uint16_t lo = new uint16_t(read(new uint16_t(addr_abs.get() + 0)));
+        uint16_t hi = new uint16_t(read(new uint16_t(addr_abs.get() + 1)));
+
+        pc.set((hi.get() << 8) | lo.get());
+        addr_rel.set(0x0000);
+        addr_abs.set(0x0000);
+        fetched.set(0x00);
+        cycles.set(8);
+    }
+
+    public void irq() {
+        if(getFlag(I).get() == 0) {
+            write(new uint16_t(0x0100 + stkp.get()), new uint8_t((pc.get() >> 8) & 0x00ff));
+            stkp.DECREMENT(1);
+            write(new uint16_t(0x0100 + stkp.get()), new uint8_t(pc.get() & 0x00ff));
+            stkp.DECREMENT(1);
+
+            setFlag(B, false);
+            setFlag(U, true);
+            setFlag(I, true);
+            write(new uint16_t(0x0100 + stkp.get()), status);
+            stkp.DECREMENT(1);
+
+            addr_abs.set(0xfffe);
+            uint16_t lo = new uint16_t(read(new uint16_t(addr_abs.get() + 0)));
+            uint16_t hi = new uint16_t(read(new uint16_t(addr_abs.get() + 1)));
+            pc.set((hi.get() << 8) | lo.get());
+            cycles.set(7);
+        }
+    }
+
+    public void nmi() {
+        write(new uint16_t(0x0100 + stkp.get()), new uint8_t((pc.get() >> 8) & 0x00ff));
+        stkp.DECREMENT(1);
+        write(new uint16_t(0x0100 + stkp.get()), new uint8_t(pc.get() & 0x00ff));
+        stkp.DECREMENT(1);
+
+        setFlag(B, false);
+        setFlag(U, true);
+        setFlag(I, true);
+        write(new uint16_t(0x0100 + stkp.get()), status);
+        stkp.DECREMENT(1);
+
+        addr_abs.set(0xfffa);
+        uint16_t lo = new uint16_t(read(new uint16_t(addr_abs.get() + 0)));
+        uint16_t hi = new uint16_t(read(new uint16_t(addr_abs.get() + 1)));
+        pc.set((hi.get() << 8) | lo.get());
+        cycles.set(8);
+    }
 
     public uint8_t fetch() {
         if(!( instructions.lookup[opcode.get()].addrMode().get() == IMP().get() ))
@@ -666,5 +736,108 @@ public class CPU_6502 {
 
     uint8_t XXX() {
         return new uint8_t(0);
+    }
+
+    //helper functions
+    public boolean complete() {
+        return cycles.get() == 0;
+    }
+
+    public String hex(Unsigned n, int d) {
+        String s = String.valueOf(d);
+        for(int i = d - 1; i >= 0; i--, n.set(n.get() >> 4))
+            s.toCharArray()[i] = "0123456789ABCDEF".toCharArray()[n.get() & 0xf];
+        return s;
+    }
+
+    public Map<uint16_t, String> disassemble(uint16_t nStart, uint16_t nStop) {
+        uint32_t addr = new uint32_t(nStart);
+        uint8_t value = new uint8_t(0x00);
+        uint8_t lo = new uint8_t(0x00);
+        uint8_t hi = new uint8_t(0x00);
+        Map<uint16_t, String> mapLines = new HashMap<uint16_t, String>();
+        uint16_t line_addr = new uint16_t(0);
+
+        while(addr.get() <= nStop.get()) {
+            line_addr.set(addr);
+            String sInst = "$" + hex(addr, 4) + ": ";
+            uint8_t opcode = new uint8_t(bus.read(new uint16_t(addr), true));
+            addr.INCREMENT(1);
+            sInst += instructions.lookup[opcode.get()].name() + " ";
+
+            if(instructions.lookup[opcode.get()].addrMode().get() == IMP().get()) {
+                sInst += " {IMP}";
+            }
+            else if(instructions.lookup[opcode.get()].addrMode().get() == IMM().get()) {
+                value.set(bus.read(new uint16_t(addr), true));
+                addr.INCREMENT(1);
+                sInst += "$" + hex(value, 2) + " {IMM}";
+            }
+            else if(instructions.lookup[opcode.get()].addrMode().get() == ZP0().get()) {
+                lo.set(bus.read(new uint16_t(addr), true));
+                addr.INCREMENT(1);
+                hi.set(0x00);
+                sInst += "$" + hex(lo, 2) + " {ZP0}";
+            }
+            else if(instructions.lookup[opcode.get()].addrMode().get() == ZPX().get()) {
+                lo.set(bus.read(new uint16_t(addr), true));
+                addr.INCREMENT(1);
+                hi.set(0x00);
+                sInst += "$" + hex(lo, 2) + ", X {ZPX}";
+            }
+            else if(instructions.lookup[opcode.get()].addrMode().get() == ZPY().get()) {
+                lo.set(bus.read(new uint16_t(addr), true));
+                addr.INCREMENT(1);
+                hi.set(0x00);
+                sInst += "$" + hex(lo, 2) + ", Y {ZPY}";
+            }
+            else if(instructions.lookup[opcode.get()].addrMode().get() == IZX().get()) {
+                lo.set(bus.read(new uint16_t(addr), true));
+                addr.INCREMENT(1);
+                hi.set(0x00);
+                sInst += "($" + hex(lo, 2) + ",X) {IZX}";
+            }
+            else if(instructions.lookup[opcode.get()].addrMode().get() == IZY().get()) {
+                lo.set(bus.read(new uint16_t(addr), true));
+                addr.INCREMENT(1);
+                hi.set(0x00);
+                sInst += "($" + hex(lo, 2) + ",Y) {IZY}";
+            }
+            else if(instructions.lookup[opcode.get()].addrMode().get() == ABS().get()) {
+                lo.set(bus.read(new uint16_t(addr), true));
+                addr.INCREMENT(1);
+                hi.set(bus.read(new uint16_t(addr), true));
+                addr.INCREMENT(1);
+                sInst += "$" + hex(new uint16_t( (hi.get() << 8) | lo.get()), 4) + " {ABS}";
+            }
+            else if(instructions.lookup[opcode.get()].addrMode().get() == ABX().get()) {
+                lo.set(bus.read(new uint16_t(addr), true));
+                addr.INCREMENT(1);
+                hi.set(bus.read(new uint16_t(addr), true));
+                addr.INCREMENT(1);
+                sInst += "$" + hex(new uint16_t( (hi.get() << 8) | lo.get()), 4) + ", X {ABX}";
+            }
+            else if(instructions.lookup[opcode.get()].addrMode().get() == ABY().get()) {
+                lo.set(bus.read(new uint16_t(addr), true));
+                addr.INCREMENT(1);
+                hi.set(bus.read(new uint16_t(addr), true));
+                addr.INCREMENT(1);
+                sInst += "$" + hex(new uint16_t( (hi.get() << 8) | lo.get()), 4) + ", Y {ABY}";
+            }
+            else if(instructions.lookup[opcode.get()].addrMode().get() == IND().get()) {
+                lo.set(bus.read(new uint16_t(addr), true));
+                addr.INCREMENT(1);
+                hi.set(bus.read(new uint16_t(addr), true));
+                addr.INCREMENT(1);
+                sInst += "($" + hex(new uint16_t( (hi.get() << 8) | lo.get()), 4) + ") {IND}";
+            }
+            else if(instructions.lookup[opcode.get()].addrMode().get() == REL().get()) {
+                value.set(bus.read(new uint16_t(addr), true));
+                addr.INCREMENT(1);
+                sInst += "$" + hex(value, 2) + " [$" + hex(new uint32_t(addr.get() + value.get()), 4) + "] {REL}";
+            }
+            mapLines.put(line_addr, sInst);
+        }
+        return  mapLines;
     }
 }

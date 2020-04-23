@@ -19,7 +19,7 @@ public class Bus {
     //bus read and write
     public void write(uint16_t addr, uint8_t data) {
         if(addr.get() >= 0x0000 && addr.get() <= 0xffff)
-            ram[addr.get()].set(data.get());
+            ram[addr.get()].set(data);
     }
 
     public uint8_t read(uint16_t addr, boolean bReadOnly) {
