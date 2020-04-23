@@ -2,7 +2,6 @@ import java.nio.IntBuffer;
 import java.util.Objects;
 
 import Emulator.Emulator;
-import Example.Example;
 import InputHandler.Keyboard;
 import org.lwjgl.glfw.*;
 import org.lwjgl.opengl.GL;
@@ -10,8 +9,7 @@ import org.lwjgl.opengl.GL11;
 import org.lwjgl.system.MemoryStack;
 import PixelEngine.PixelEngine;
 
-import static org.lwjgl.opengles.GLES20.GL_COLOR_BUFFER_BIT;
-import static org.lwjgl.opengles.GLES20.GL_DEPTH_BUFFER_BIT;
+import static org.lwjgl.opengles.GLES20.*;
 import static org.lwjgl.system.MemoryStack.*;
 import static org.lwjgl.system.MemoryUtil.*;
 
@@ -21,7 +19,6 @@ public class Main {
     private GLFWKeyCallback keyCallback;
     private final int WIDTH, HEIGHT, SIZE;
     private PixelEngine pixelEngine;
-    //private Example example;
     private Emulator emulator;
 
     public Main(int WIDTH, int HEIGHT, int SIZE) {
@@ -58,7 +55,6 @@ public class Main {
         }
 
         GLFW.glfwSetKeyCallback(window, keyCallback = new Keyboard());
-        //GLFW.glfwSetKeyCallback(window, (window, key, scancode, action, mods) -> {});
 
         try(MemoryStack stack = stackPush()){
             IntBuffer pWidth = stack.mallocInt(1);
@@ -113,13 +109,11 @@ public class Main {
     private void init() {
         pixelEngine = new PixelEngine(WIDTH, HEIGHT, SIZE);
         emulator = new Emulator(pixelEngine);
-        //example = new Example(pixelEngine);
     }
 
     private void tick() {
         pixelEngine.tick();
         emulator.tick();
-        //example.tick();
     }
 
     private void render() {
