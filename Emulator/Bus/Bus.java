@@ -7,12 +7,13 @@ import java.util.Arrays;
 public class Bus {
 
     //devices on bus
-    public CPU_6502 cpu = new CPU_6502();
+    public CPU_6502 cpu;
     public int[] ram = new int[64 * 1024];
 
     public Bus() {
-        Arrays.fill(ram,0x00);
+        cpu = new CPU_6502();
         cpu.connectBus(this);
+        Arrays.fill(ram,0x00);
     }
 
     //bus read and write

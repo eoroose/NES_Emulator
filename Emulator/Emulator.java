@@ -30,6 +30,7 @@ public class Emulator {
 
     public void init() {
         nes = new Bus();
+        mapAsm = new HashMap<Integer, String>();
         //ram
         pixelString1 = new PixelString(pixelEngine, 2, 2, 1, "");
         pixelString2 = new PixelString(pixelEngine, 2, 182, 1, "");
@@ -52,8 +53,7 @@ public class Emulator {
         int[] ss = {0xA2, 0x0A, 0x8E, 0x00, 0x00, 0xA2, 0x03, 0x8E, 0x01, 0x00, 0xAC, 0x00, 0x00, 0xA9, 0x00, 0x18, 0x6D, 0x01, 0x00, 0x88, 0xD0, 0xFA, 0x8D, 0x02, 0x00, 0xEA, 0xEA, 0xEA};
         int nOffset = 0x8000;
         for (int s : ss) {
-            nes.ram[nOffset] = s;
-            nOffset++;
+            nes.ram[nOffset++] = s;
         }
         nes.ram[0xfffc] = 0x00;
         nes.ram[0xfffd] = 0x80;
@@ -66,12 +66,23 @@ public class Emulator {
     boolean first_time = true;
     long last = 0;
     long now = 0;
+    long timer = 0;
 
     public void tick() {
-        if(Keyboard.keys[GLFW_KEY_UP]) {
+
+        if(first_time) {
+            last = System.nanoTime();
+            first_time = false;
+        }
+        now = System.nanoTime();
+        timer += now - last;
+        last = now;
+        if(timer >= 1000000000) {
+        //if(Keyboard.keys[GLFW_KEY_UP]) {
             do {
                 nes.cpu.clock();
             } while (!nes.cpu.complete());
+            timer = 0;
         }
         if(Keyboard.keys[GLFW_KEY_R])
             nes.cpu.reset();

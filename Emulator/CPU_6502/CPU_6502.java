@@ -17,13 +17,16 @@ public class CPU_6502 {
     public int y = 0x00;       //y register
     public int stkp = 0x00;    //stack pointer (points to location on bus)
     public int status = 0x00;  //status register
-    public int pc = 0x00;       //program counter
+    public int pc = 0x0000;    //program counter
 
-    public int fetched = 0x00;
-    public int addr_abs = 0x0000;
-    public int addr_rel = 0x0000;
-    public int opcode = 0x00;
-    public int cycles = 0x00;
+    private int fetched = 0x00;
+    private int addr_abs = 0x0000;
+    private int addr_rel = 0x0000;
+    private int opcode = 0x00;
+    private int cycles = 0;
+
+    private int temp = 0x0000;
+    private int clock_count = 0;
 
     public CPU_6502() {
         instructions = new Instruction_6502(this);
@@ -55,6 +58,7 @@ public class CPU_6502 {
     public void clock() {
         if(cycles == 0) {
             opcode = read(pc);
+            setFlag(U, true);
             pc++;
 
             //get starting number of cycles
@@ -64,22 +68,24 @@ public class CPU_6502 {
             int additional_cycle2 = instructions.lookup[opcode].operate();
 
             cycles += additional_cycle1 & additional_cycle2;
+            setFlag(U, true);
         }
+        clock_count++;
         cycles--;
     }
 
     public void reset() {
+        addr_abs = 0xfffc;
+        int lo = read((addr_abs + 0));
+        int hi = (read((addr_abs + 1)));
+        pc = (hi << 8) | lo;
+
         a = 0;
         x = 0;
         y = 0;
         stkp = 0xfd;
         status = 0x00 | U.getOperation();
 
-        addr_abs = 0xfffc;
-        int lo = read((addr_abs + 0));
-        int hi = (read((addr_abs + 1)));
-
-        pc = (hi << 8) | lo;
         addr_rel = 0x0000;
         addr_abs = 0x0000;
         fetched = 0x00;
@@ -139,8 +145,7 @@ public class CPU_6502 {
     }
 
     int IMM() {    // address mode: immediate
-        addr_abs = pc;
-        pc++;
+        addr_abs = pc++;
         return 0;
     }
 
@@ -168,7 +173,7 @@ public class CPU_6502 {
     int REL() {    // address mode: relative
         addr_rel = read(pc);
         pc++;
-        if((addr_rel & 0x80) > 0)
+        if((addr_rel & 0x80) != 0)
             addr_rel |= 0xff00;
         return 0;
     }
@@ -217,9 +222,9 @@ public class CPU_6502 {
         pc++;
         int ptr = (ptr_hi << 8) | ptr_lo;
         if(ptr_lo == 0x00ff)
-            addr_abs = (read(ptr & 0xff00) << 8) | read(ptr);
+            addr_abs = (read(ptr & 0xff00) << 8) | read(ptr + 0);
         else
-            addr_abs = (read(ptr + 1) << 8) | read(ptr);
+            addr_abs = (read(ptr + 1) << 8) | read(ptr + 0);
         return 0;
     }
 
@@ -249,11 +254,11 @@ public class CPU_6502 {
     //56 opcodes  + 1 illegal opcode (XXX)
     int ADC() {
         fetch();
-        int temp = a + fetched + getFlag(C);
+        temp = a + fetched + getFlag(C);
         setFlag(C, temp > 255);
         setFlag(Z, (temp & 0x00ff) == 0);
         setFlag(V, (~(a ^ fetched) & (a ^ temp) & 0x0080) > 0);
-        setFlag(N, (temp & 0x80) > 0);
+        setFlag(N, (temp & 0x80) != 0);
         a = temp & 0x00ff;
         return 1;
     }
@@ -262,16 +267,16 @@ public class CPU_6502 {
         fetch();
         a &= fetched;
         setFlag(Z, a == 0x00);
-        setFlag(N, (a & 0x80) > 0);
+        setFlag(N, (a & 0x80) != 0);
         return 1;
     }
 
     int ASL() {
         fetch();
-        int temp = fetched << 1;
+        temp = fetched << 1;
         setFlag(C, (temp & 0xff00) > 0);
         setFlag(Z, (temp & 0x00ff) == 0x00);
-        setFlag(N, (temp & 0x80) > 0);
+        setFlag(N, (temp & 0x80) != 0);
         if(instructions.lookup[opcode].addrMode() == IMP())
             a = temp & 0x00ff;
         else
@@ -284,7 +289,7 @@ public class CPU_6502 {
             cycles++;
             addr_abs = pc + addr_rel;
             if((addr_abs & 0xff00) != (pc & 0xff00))
-            cycles++;
+                cycles++;
             pc = addr_abs;
         }
         return 0;
@@ -314,10 +319,10 @@ public class CPU_6502 {
 
     int BIT() {
         fetch();
-        int temp = a & fetch();
+        temp = a & fetched;
         setFlag(Z, (temp & 0x00ff) == 0x00);
-        setFlag(N, (fetched & (1 << 7)) > 0);
-        setFlag(V, (fetched & (1 << 6)) > 0);
+        setFlag(N, (fetched & (1 << 7)) != 0);
+        setFlag(V, (fetched & (1 << 6)) != 0);
         return 0;
     }
 
@@ -415,51 +420,51 @@ public class CPU_6502 {
 
     int CMP() {
         fetch();
-        int temp = a - fetched;
+        temp = a - fetched;
         setFlag(C, a >= fetched);
         setFlag(Z, (temp & 0x00ff) == 0x0000);
-        setFlag(N, (temp & 0x0080) > 0);
+        setFlag(N, (temp & 0x0080) != 0);
         return 1;
     }
 
     int CPX() {
         fetch();
-        int temp = x - fetched;
+        temp = x - fetched;
         setFlag(C, x >= fetched);
         setFlag(Z, (temp & 0x00ff) == 0x0000);
-        setFlag(N, (temp & 0x0080) > 0);
+        setFlag(N, (temp & 0x0080) != 0);
         return 0;
     }
 
     int CPY() {
         fetch();
-        int temp = y - fetched;
+        temp = y - fetched;
         setFlag(C, y >= fetched);
         setFlag(Z, (temp & 0x00ff) == 0x0000);
-        setFlag(N, (temp & 0x0080) > 0);
+        setFlag(N, (temp & 0x0080) != 0);
         return 0;
     }
 
     int DEC() {
         fetch();
-        int temp = fetched - 1;
+        temp = fetched - 1;
         write(addr_abs, (temp & 0x00ff));
         setFlag(Z, (temp & 0x00ff) == 0x0000);
-        setFlag(N, (temp & 0x0080) > 0);
+        setFlag(N, (temp & 0x0080) != 0);
         return 0;
     }
 
     int DEX() {
         x--;
         setFlag(Z, x == 0x00);
-        setFlag(N, (x & 0x80) > 0);
+        setFlag(N, (x & 0x80) != 0);
         return 0;
     }
 
     int DEY() {
         y--;
         setFlag(Z, y == 0x00);
-        setFlag(N, (y & 0x80) > 0);
+        setFlag(N, (y & 0x80) != 0);
         return 0;
     }
 
@@ -467,30 +472,30 @@ public class CPU_6502 {
         fetch();
         a ^= fetched;
         setFlag(Z, a == 0x00);
-        setFlag(N, (a & 0x80) > 0);
-        return 0;
+        setFlag(N, (a & 0x80) != 0);
+        return 1;
     }
 
     int INC() {
         fetch();
-        int temp = fetched + 1;
+        temp = fetched + 1;
         write(addr_abs, (temp & 0x00ff));
         setFlag(Z, (temp & 0x00ff) == 0x0000);
-        setFlag(N, (temp & 0x0080) > 0);
+        setFlag(N, (temp & 0x0080) != 0);
         return 0;
     }
 
     int INX() {
         x++;
         setFlag(Z, x == 0x00);
-        setFlag(N, (x & 0x80) > 0);
+        setFlag(N, (x & 0x80) != 0);
         return 0;
     }
 
     int INY() {
         y++;
         setFlag(Z, y == 0x00);
-        setFlag(N, (y & 0x80) > 0);
+        setFlag(N, (y & 0x80) != 0);
         return 0;
     }
 
@@ -513,7 +518,7 @@ public class CPU_6502 {
         fetch();
         a = fetched;
         setFlag(Z, a == 0x00);
-        setFlag(N, (a & 0x80) > 0);
+        setFlag(N, (a & 0x80) != 0);
         return 1;
     }
 
@@ -521,7 +526,7 @@ public class CPU_6502 {
         fetch();
         x = fetched;
         setFlag(Z, x == 0x00);
-        setFlag(N, (x & 0x80) > 0);
+        setFlag(N, (x & 0x80) != 0);
         return 1;
     }
 
@@ -529,16 +534,16 @@ public class CPU_6502 {
         fetch();
         y = fetched;
         setFlag(Z, y == 0x00);
-        setFlag(N, (y & 0x80) > 0);
+        setFlag(N, (y & 0x80) != 0);
         return 1;
     }
 
     int LSR() {
         fetch();
-        setFlag(C, (fetched & 0x0001) > 0);
-        int temp = fetched >> 1;
+        setFlag(C, (fetched & 0x0001) != 0);
+        temp = fetched >> 1;
         setFlag(Z, (temp & 0x00ff) == 0x0000);
-        setFlag(N, (temp & 0x0080) > 0);
+        setFlag(N, (temp & 0x0080) != 0);
         if(instructions.lookup[opcode].addrMode() == IMP())
             a = temp & 0x00ff;
         else
@@ -563,7 +568,7 @@ public class CPU_6502 {
         fetch();
         a |= fetched;
         setFlag(Z, a == 0x00);
-        setFlag(N, (a & 0x80) > 0);
+        setFlag(N, (a & 0x80) != 0);
         return 1;
     }
 
@@ -585,7 +590,7 @@ public class CPU_6502 {
         stkp++;
         a = read(0x0100 + stkp);
         setFlag(Z, a == 0x00);
-        setFlag(N, (a & 0x80) > 0);
+        setFlag(N, (a & 0x80) != 0);
         return 0;
     }
 
@@ -598,10 +603,10 @@ public class CPU_6502 {
 
     int ROL() {
         fetch();
-        int temp = (fetched << 1) | getFlag(C);
-        setFlag(C, (temp & 0xff00) > 0);
+        temp = (fetched << 1) | getFlag(C);
+        setFlag(C, (temp & 0xff00) != 0);
         setFlag(Z, (temp & 0x00ff) == 0x0000);
-        setFlag(N, (temp & 0x0080) > 0);
+        setFlag(N, (temp & 0x0080) != 0);
         if(instructions.lookup[opcode].addrMode() == IMP())
             a = temp & 0x00ff;
         else
@@ -611,10 +616,10 @@ public class CPU_6502 {
 
     int ROR() {
         fetch();
-        int temp = (getFlag(C) << 1) | (fetched >> 1);
-        setFlag(C, (fetched & 0x01) > 0);
+        temp = (getFlag(C) << 1) | (fetched >> 1);
+        setFlag(C, (fetched & 0x01) != 0);
         setFlag(Z, (temp & 0x00ff) == 0x00);
-        setFlag(N, (temp & 0x0080) > 0);
+        setFlag(N, (temp & 0x0080) != 0);
         if(instructions.lookup[opcode].addrMode() == IMP())
             a = temp & 0x00ff;
         else
@@ -640,17 +645,18 @@ public class CPU_6502 {
         pc = read(0x0100 + stkp);
         stkp++;
         pc |= read(0x0100 + stkp) << 8;
+        pc++;
         return 0;
     }
 
     int SBC() {
         fetch();
         int value = fetched ^ 0x00ff;
-        int temp = a + value + getFlag(C);
-        setFlag(C, (temp & 0xff00) > 0);
+        temp = a + value + getFlag(C);
+        setFlag(C, (temp & 0xff00) != 0);
         setFlag(Z, (temp & 0x00ff) == 0);
-        setFlag(V, ((temp ^ a) & (temp ^ value) & 0x0080) > 0);
-        setFlag(N, (temp & 0x0080) > 0);
+        setFlag(V, ((temp ^ a) & (temp ^ value) & 0x0080) != 0);
+        setFlag(N, (temp & 0x0080) != 0);
         a = temp & 0x00ff;
         return 1;
     }
@@ -687,28 +693,28 @@ public class CPU_6502 {
     int TAX() {
         x = a;
         setFlag(Z, x == 0x00);
-        setFlag(N, (x & 0x80) > 0);
+        setFlag(N, (x & 0x80) != 0);
         return 0;
     }
 
     int TAY() {
         y = a;
         setFlag(Z, y == 0x00);
-        setFlag(N, (y & 0x80) > 0);
+        setFlag(N, (y & 0x80) != 0);
         return 0;
     }
 
     int TSX() {
         x = stkp;
         setFlag(Z, x == 0x00);
-        setFlag(N, (x & 0x80) > 0);
+        setFlag(N, (x & 0x80) != 0);
         return 0;
     }
 
     int TXA() {
         a = x;
         setFlag(Z, a == 0x00);
-        setFlag(N, (a & 0x80) > 0);
+        setFlag(N, (a & 0x80) != 0);
         return 0;
     }
 
@@ -720,7 +726,7 @@ public class CPU_6502 {
     int TYA() {
         a = y;
         setFlag(Z, a == 0x00);
-        setFlag(N, (a & 0x80) > 0);
+        setFlag(N, (a & 0x80) != 0);
         return 0;
     }
 
